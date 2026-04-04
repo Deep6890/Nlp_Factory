@@ -1,10 +1,11 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, History, CircleDot, BarChart2, Hexagon, Bell, AlertTriangle, FileText, ShieldCheck, LogOut } from 'lucide-react';
+import LogoutModal from '../Common/LogoutModal';
 import './Layout.css';
 
 const Sidebar = ({ isOpen = true }) => {
-  const navigate = useNavigate();
+  const [showLogout, setShowLogout] = useState(false);
   
   const mainItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -73,36 +74,36 @@ const Sidebar = ({ isOpen = true }) => {
   );
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-      <div className="logo-container">
-        <div className="logo-icon">
-          <ShieldCheck size={22} color="white" strokeWidth={2.5} />
+    <>
+      <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+        <div className="logo-container">
+          <div className="logo-icon">
+            <ShieldCheck size={22} color="white" strokeWidth={2.5} />
+          </div>
+          <h2>Armor<span style={{ fontWeight: 300, opacity: 0.8 }}>AI</span></h2>
         </div>
-        <h2>Armor<span style={{ fontWeight: 300, opacity: 0.8 }}>AI</span></h2>
+        <nav style={{ overflowY: 'auto' }}>
+          {mainItems.map(renderNavLink)}
+          
+          <SectionHeading title="Analytics" />
+          {analyticsItems.map(renderNavLink)}
+
+          <SectionHeading title="Actions" />
+          {actionsItems.map(renderNavLink)}
+
+          <button 
+            onClick={() => setShowLogout(true)}
+            className="nav-link" 
+            style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit', fontSize: '16px', marginTop: '20px' }}
+          >
+            <span style={{display: 'flex', alignItems: 'center'}}><LogOut size={20} color="#ef4444" /></span> 
+            <span className="nav-text" style={{ color: '#ef4444', fontWeight: '700', marginLeft: '12px' }}>Logout</span>
+          </button>
+        </nav>
       </div>
-      <nav style={{ overflowY: 'auto' }}>
-        {mainItems.map(renderNavLink)}
-        
-        <SectionHeading title="Analytics" />
-        {analyticsItems.map(renderNavLink)}
 
-        <SectionHeading title="Actions" />
-        {actionsItems.map(renderNavLink)}
-
-        <button 
-          onClick={() => {
-            if (window.confirm("Are you sure you want to log out?")) {
-              navigate('/');
-            }
-          }}
-          className="nav-link" 
-          style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit', fontSize: '16px', marginTop: '20px' }}
-        >
-          <span style={{display: 'flex', alignItems: 'center'}}><LogOut size={20} color="#ef4444" /></span> 
-          <span className="nav-text" style={{ color: '#ef4444', fontWeight: '700', marginLeft: '12px' }}>Logout</span>
-        </button>
-      </nav>
-    </div>
+      <LogoutModal isOpen={showLogout} onClose={() => setShowLogout(false)} />
+    </>
   );
 };
 

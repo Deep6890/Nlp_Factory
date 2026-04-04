@@ -33,20 +33,8 @@ html, body {
 }
 
 /* ══════════════════════════════════════
-   ANIMATED BACKGROUND
+   5. MORPHING BACKGROUND BLOB
 ══════════════════════════════════════ */
-
-/* particle canvas — sits behind everything */
-.lp-bg-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* morphing colour blobs */
 .lp-bg-blobs {
   position: absolute;
   inset: 0;
@@ -55,63 +43,27 @@ html, body {
   overflow: hidden;
 }
 
-.lp-blob {
+.lp-morph-blob {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(72px);
-  will-change: transform, opacity;
-}
-
-.lp-blob.b1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, #ceeea0 0%, #a8d870 60%, transparent 100%);
-  top: -180px; left: 20%;
-  opacity: 0.55;
-  animation: blob1 10s ease-in-out infinite alternate;
-}
-.lp-blob.b2 {
-  width: 480px; height: 480px;
-  background: radial-gradient(circle, #e4f5b8 0%, #c8e880 60%, transparent 100%);
-  bottom: -140px; right: 8%;
+  top: 30%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(160,200,120,0.08) 0%, rgba(160,200,120,0.03) 50%, transparent 72%);
+  border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
   opacity: 0.5;
-  animation: blob2 13s ease-in-out infinite alternate;
-}
-.lp-blob.b3 {
-  width: 360px; height: 360px;
-  background: radial-gradient(circle, #f0fad0 0%, #ddeb9d 60%, transparent 100%);
-  top: 35%; left: -80px;
-  opacity: 0.45;
-  animation: blob3 8s ease-in-out infinite alternate;
-}
-.lp-blob.b4 {
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, #d8f0a0 0%, #b0d860 60%, transparent 100%);
-  top: 10%; right: 15%;
-  opacity: 0.35;
-  animation: blob4 11s ease-in-out infinite alternate;
+  animation: morphBlob 10s ease-in-out infinite;
+  filter: blur(40px);
+  will-change: transform, border-radius;
 }
 
-@keyframes blob1 {
-  0%   { transform: translate(0px,   0px)   scale(1);    }
-  33%  { transform: translate(50px,  35px)  scale(1.08); }
-  66%  { transform: translate(-30px, 55px)  scale(0.95); }
-  100% { transform: translate(40px, -40px)  scale(1.05); }
-}
-@keyframes blob2 {
-  0%   { transform: translate(0px,   0px)   scale(1);    }
-  40%  { transform: translate(-55px,-30px)  scale(1.1);  }
-  80%  { transform: translate(30px,  50px)  scale(0.93); }
-  100% { transform: translate(-20px, 20px)  scale(1.04); }
-}
-@keyframes blob3 {
-  0%   { transform: translate(0px,  0px)   scale(1);    }
-  50%  { transform: translate(45px,-50px)  scale(1.12); }
-  100% { transform: translate(20px, 40px)  scale(0.9);  }
-}
-@keyframes blob4 {
-  0%   { transform: translate(0px,  0px)   scale(1);    }
-  50%  { transform: translate(-40px,30px)  scale(1.15); }
-  100% { transform: translate(25px,-35px)  scale(0.88); }
+@keyframes morphBlob {
+  0%   { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25%  { border-radius: 60% 40% 30% 70% / 40% 60% 40% 60%; transform: translate(-50%, -50%) scale(1.08) rotate(45deg); }
+  50%  { border-radius: 30% 70% 50% 50% / 70% 40% 60% 30%; transform: translate(-50%, -50%) scale(0.95) rotate(90deg); }
+  75%  { border-radius: 50% 50% 70% 30% / 30% 70% 30% 70%; transform: translate(-50%, -50%) scale(1.05) rotate(135deg); }
+  100% { border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; transform: translate(-50%, -50%) scale(1) rotate(180deg); }
 }
 
 /* ─── NAVBAR ─── */
@@ -253,8 +205,16 @@ html, body {
   letter-spacing: -2px;
   color: var(--text);
   margin-bottom: 18px;
+  perspective: 600px;
 }
 
+/* ─── 1. HERO TEXT — staggered word slide-up ─── */
+.hero-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ─── 2. "Protect More." — letter-pop with green glow ─── */
 .lp-title .accent {
   color: var(--green-dk);
   position: relative;
@@ -270,6 +230,34 @@ html, body {
   border-radius: 2px;
 }
 
+.letter-pop-wrapper {
+  display: inline-block !important;
+}
+
+.letter-pop-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  text-shadow:
+    0 0 12px rgba(160,200,120,0.0),
+    0 0 24px rgba(160,200,120,0.0);
+  animation: greenGlow 2.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+
+@keyframes greenGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 8px rgba(160,200,120,0.15),
+      0 0 20px rgba(160,200,120,0.08);
+  }
+  50% {
+    text-shadow:
+      0 0 16px rgba(160,200,120,0.45),
+      0 0 40px rgba(160,200,120,0.2),
+      0 0 60px rgba(160,200,120,0.08);
+  }
+}
+
 .lp-sub {
   color: var(--text-mid);
   font-size: 17px;
@@ -278,7 +266,13 @@ html, body {
   max-width: 380px;
 }
 
-.lp-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.lp-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* ─── 6a. MAGNETIC HOVER — "Get Started" ─── */
+.lp-btn-magnetic-wrap {
+  display: inline-block;
+  will-change: transform;
+}
 
 .lp-btn-primary {
   background: var(--text);
@@ -313,23 +307,67 @@ html, body {
   flex-shrink: 0;
 }
 
-.lp-btn-secondary {
+/* ─── 6b. BORDER-DRAW — "See How It Works" ─── */
+.lp-btn-secondary.lp-btn-border-draw {
   background: transparent;
   color: var(--text);
-  border: 1.5px solid rgba(26,32,16,0.18);
-  padding: 14px 30px;
+  border: none;
+  padding: 0;
   border-radius: 40px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
   text-decoration: none;
   transition: all 0.25s ease;
+  position: relative;
+  width: 200px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.lp-btn-secondary:hover {
-  border-color: var(--green);
+.lp-btn-border-draw-text {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.lp-btn-border-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: visible;
+}
+
+.lp-btn-border-rect {
+  stroke: rgba(26,32,16,0.18);
+  stroke-dasharray: 510;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.3s ease;
+}
+
+.lp-btn-border-draw.is-hovered .lp-btn-border-rect {
+  stroke: var(--green);
+  stroke-dashoffset: 0;
+  animation: borderDraw 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes borderDraw {
+  0%   { stroke-dashoffset: 510; stroke: var(--green); }
+  100% { stroke-dashoffset: 0;   stroke: var(--green); }
+}
+
+.lp-btn-border-draw:not(.is-hovered) .lp-btn-border-rect {
+  animation: none;
+  stroke-dashoffset: 0;
+  stroke: rgba(26,32,16,0.18);
+}
+
+.lp-btn-border-draw:hover {
   background: rgba(160,200,120,0.09);
-  transform: translateY(-1px);
 }
 
 /* ─── STATS PILL ─── */
@@ -390,6 +428,7 @@ html, body {
   margin-left: -40px;
 }
 
+/* ─── 3. ILLUSTRATION — infinite gentle float + mouse-tracking 3D tilt ─── */
 .lp-illustration {
   width: min(720px, 68vw);
   height: auto;
@@ -398,6 +437,72 @@ html, body {
   position: relative;
   z-index: 6;
   margin-left: -40px;
+}
+
+.lp-illustration-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* ─── 4. COIN ICONS — slow orbit ─── */
+.lp-orbit-container {
+  position: absolute;
+  width: min(520px, 52vw);
+  height: min(520px, 52vw);
+  z-index: 7;
+  pointer-events: none;
+  margin-left: -40px;
+}
+
+.lp-orbit-coin {
+  position: absolute;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
+}
+
+/* Each coin has its own orbit path */
+.lp-orbit-1 {
+  animation: orbit1 14s linear infinite;
+  top: 50%;
+  left: 50%;
+}
+.lp-orbit-2 {
+  animation: orbit2 18s linear infinite;
+  top: 50%;
+  left: 50%;
+}
+.lp-orbit-3 {
+  animation: orbit3 22s linear infinite;
+  top: 50%;
+  left: 50%;
+}
+.lp-orbit-4 {
+  animation: orbit4 16s linear infinite;
+  top: 50%;
+  left: 50%;
+}
+
+@keyframes orbit1 {
+  0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(200px) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+@keyframes orbit2 {
+  0%   { transform: translate(-50%, -50%) rotate(90deg)  translateX(230px) rotate(-90deg); }
+  100% { transform: translate(-50%, -50%) rotate(450deg) translateX(230px) rotate(-450deg); }
+}
+@keyframes orbit3 {
+  0%   { transform: translate(-50%, -50%) rotate(180deg) translateX(190px) rotate(-180deg); }
+  100% { transform: translate(-50%, -50%) rotate(540deg) translateX(190px) rotate(-540deg); }
+}
+@keyframes orbit4 {
+  0%   { transform: translate(-50%, -50%) rotate(270deg) translateX(250px) rotate(-270deg); }
+  100% { transform: translate(-50%, -50%) rotate(630deg) translateX(250px) rotate(-630deg); }
 }
 
 /* ─── BG WATERMARK ─── */
@@ -422,6 +527,7 @@ html, body {
   .lp-left { padding-left: 3vw; margin-left: 8px; }
   .lp-illustration { width: min(420px, 54vw); margin-left: -20px; }
   .lp-nav-links { display: none; }
+  .lp-orbit-container { width: min(380px, 46vw); height: min(380px, 46vw); margin-left: -20px; }
 }
 
 @media (max-width: 600px) {
@@ -436,4 +542,22 @@ html, body {
   .lp-center { min-height: 280px; }
   .lp-illustration { width: 92vw; margin-left: 0; }
   .lp-bg-title { display: none; }
+  .lp-orbit-container { width: 260px; height: 260px; margin-left: 0; }
+
+  @keyframes orbit1 {
+    0%   { transform: translate(-50%, -50%) rotate(0deg)   translateX(110px) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg) translateX(110px) rotate(-360deg); }
+  }
+  @keyframes orbit2 {
+    0%   { transform: translate(-50%, -50%) rotate(90deg)  translateX(125px) rotate(-90deg); }
+    100% { transform: translate(-50%, -50%) rotate(450deg) translateX(125px) rotate(-450deg); }
+  }
+  @keyframes orbit3 {
+    0%   { transform: translate(-50%, -50%) rotate(180deg) translateX(100px) rotate(-180deg); }
+    100% { transform: translate(-50%, -50%) rotate(540deg) translateX(100px) rotate(-540deg); }
+  }
+  @keyframes orbit4 {
+    0%   { transform: translate(-50%, -50%) rotate(270deg) translateX(130px) rotate(-270deg); }
+    100% { transform: translate(-50%, -50%) rotate(630deg) translateX(130px) rotate(-630deg); }
+  }
 }
