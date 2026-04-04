@@ -1,0 +1,68 @@
+# ── Dependencies ──────────────────────────────
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ── Production build ──────────────────────────
+/build
+/dist
+
+# ── Environment variables ─────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ── Testing & coverage ────────────────────────
+/coverage
+*.lcov
+.nyc_output
+
+# ── Logs ──────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+logs/
+
+# ── OS generated files ────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor & IDE ──────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+.history/
+
+# ── Cache ─────────────────────────────────────
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# ── Misc ──────────────────────────────────────
+*.pem
+*.key
+*.cert
+.vercel
+.netlify

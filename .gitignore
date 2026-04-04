@@ -1,0 +1,77 @@
+# ── Dependencies ──────────────────────────────
+node_modules/
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ── Production builds ─────────────────────────
+/build
+/dist
+/out
+
+# ── Environment variables ─────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ── Testing & coverage ────────────────────────
+/coverage
+*.lcov
+.nyc_output
+
+# ── Logs ──────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+logs/
+*.log
+
+# ── OS generated files ────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── Editor & IDE ──────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+.history/
+
+# ── Cache ─────────────────────────────────────
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.tsbuildinfo
+*.tsbuildinfo
+
+# ── Package manager locks (keep only one) ─────
+# Uncomment the one you do NOT use:
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ── Misc ──────────────────────────────────────
+*.pem
+*.key
+*.cert
+.vercel
+.netlify
