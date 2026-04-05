@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { Mic, Shield, Sparkles, FileText } from 'lucide-react';
 import { getDashboardStats } from '../../api/users';
+=======
+import {
+  Mic, Shield, Sparkles, FileText,
+} from 'lucide-react';
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 import './Main.css';
 
 /* ── Animated counter ── */
 const Counter = ({ target, suffix = '' }) => {
   const [val, setVal] = useState(0);
   useEffect(() => {
+<<<<<<< HEAD
     if (!target) return;
     let n = 0;
     const step = Math.ceil(target / 40);
@@ -16,6 +23,10 @@ const Counter = ({ target, suffix = '' }) => {
       if (n >= target) { setVal(target); clearInterval(id); }
       else setVal(n);
     }, 30);
+=======
+    let n = 0; const step = Math.ceil(target / 40);
+    const id = setInterval(() => { n += step; if (n >= target) { setVal(target); clearInterval(id); } else setVal(n); }, 30);
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     return () => clearInterval(id);
   }, [target]);
   return <>{val.toLocaleString()}{suffix}</>;
@@ -24,6 +35,7 @@ const Counter = ({ target, suffix = '' }) => {
 const Main = () => {
   const navigate = useNavigate();
   const [micPulse, setMicPulse] = useState(false);
+<<<<<<< HEAD
   const [stats, setStats]       = useState(null);
 
   useEffect(() => {
@@ -36,6 +48,11 @@ const Main = () => {
   const totalRecordings = stats?.totalRecordings ?? 0;
   const highRiskCount   = stats?.highRiskCount   ?? 0;
   const financeCount    = stats?.financeCount     ?? 0;
+=======
+
+  const handleMicEnter = () => setMicPulse(true);
+  const handleMicLeave = () => setMicPulse(false);
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 
   return (
     <div className="bento-dashboard">
@@ -44,13 +61,18 @@ const Main = () => {
       <div className="bento-grid">
 
         {/* ─── A: Tagline Card (top-left, tall) ─── */}
+<<<<<<< HEAD
         <div className="bento-card bento-a">
+=======
+        <div className="bento-card bento-a" onClick={() => navigate('/dashboard/live')}>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           <div className="bento-card-icon-sm bento-icon-accent">
             <Shield size={18} />
           </div>
           <h2 className="bento-tagline">
             Smart<br />Finance,<br />Instantly
           </h2>
+<<<<<<< HEAD
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, justifyContent: 'center', margin: '14px 0' }}>
             <p style={{ fontSize: 13, color: '#8a9a70', lineHeight: 1.5, fontWeight: 500, margin: 0 }}>
@@ -62,6 +84,8 @@ const Main = () => {
             </div>
           </div>
 
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           <div className="bento-tag-row">
             <span className="bento-tag-pill">🌿 AI-Powered</span>
             <span className="bento-tag-sub">Real-time protection</span>
@@ -86,8 +110,13 @@ const Main = () => {
           <div className="bento-orb-area">
             <div
               className={`bento-orb ${micPulse ? 'is-pulsing' : ''}`}
+<<<<<<< HEAD
               onMouseEnter={() => setMicPulse(true)}
               onMouseLeave={() => setMicPulse(false)}
+=======
+              onMouseEnter={handleMicEnter}
+              onMouseLeave={handleMicLeave}
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               onClick={(e) => { e.stopPropagation(); navigate('/dashboard/live'); }}
             >
               <div className="bento-orb-ring bento-orb-ring-outer" />
@@ -118,6 +147,7 @@ const Main = () => {
         </div>
 
         {/* ─── C: Toggle/Action card (top-right small) ─── */}
+<<<<<<< HEAD
         <div className="bento-card bento-c" onClick={() => navigate('/dashboard/settings')} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
             <div className="bento-toggle-track">
@@ -169,6 +199,23 @@ const Main = () => {
               <div style={{ position: 'absolute', bottom: 0, left: '80%', width: '14%', height: '95%', background: '#DDEB9D', borderRadius: '4px 4px 0 0', boxShadow: '0 -2px 12px rgba(160,200,120,0.4)' }} />
             </div>
           </div>
+=======
+        <div className="bento-card bento-c" onClick={() => navigate('/dashboard/settings')}>
+          <div className="bento-toggle-track">
+            <div className="bento-toggle-thumb">
+              <Sparkles size={14} />
+            </div>
+          </div>
+          <span className="bento-c-label">AI Shield Active</span>
+        </div>
+
+        {/* ─── D: Big Stat — Sessions Analyzed ─── */}
+        <div className="bento-card bento-d" onClick={() => navigate('/dashboard/insights')}>
+          <div className="bento-big-num"><Counter target={17} suffix="K+" /></div>
+          <div className="bento-stat-pill">
+            <span>sessions analyzed</span>
+          </div>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
         </div>
 
         {/* ─── H: Reports/Templates card ─── */}

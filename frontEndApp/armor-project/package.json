@@ -13,7 +13,10 @@
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.2",
     "react-scripts": "5.0.1",
+<<<<<<< HEAD
     "recharts": "^3.8.1",
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     "web-vitals": "^2.1.4"
   },
   "scripts": {

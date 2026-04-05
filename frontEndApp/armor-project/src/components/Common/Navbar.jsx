@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { User, Menu, X, Bell, LogOut } from 'lucide-react';
+<<<<<<< HEAD
 import { useAuth } from '../../context/AuthContext';
 import LogoutModal from './LogoutModal';
+=======
+import LogoutModal from './LogoutModal';
+import { useApp } from '../../context/AppContext';
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 import './Navbar.css';
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
+<<<<<<< HEAD
   const { user } = useAuth();
 
   const displayName = user?.name || 'Profile';
@@ -21,6 +27,18 @@ const Navbar = () => {
     { name: 'Risk Alerts',    path: '/dashboard/alerts' },
     { name: 'Reports',        path: '/dashboard/reports' },
     { name: 'Analytics',      path: '/dashboard/analytics' },
+=======
+  const { pendingReminders, profile } = useApp();
+
+  const navItems = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'History', path: '/dashboard/history' },
+    { name: 'Live Detection', path: '/dashboard/live' },
+    { name: 'Insights', path: '/dashboard/insights' },
+    { name: 'Decisions', path: '/dashboard/decisions' },
+    { name: 'Risk Alerts', path: '/dashboard/alerts' },
+    { name: 'Reports', path: '/dashboard/reports' },
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
   ];
 
   return (
@@ -58,11 +76,19 @@ const Navbar = () => {
             title="Reminders"
           >
             <Bell size={16} />
+<<<<<<< HEAD
             <span className="nav-reminder-badge"></span>
           </NavLink>
           <Link to="/dashboard/profile" className="nav-profile" style={{ textDecoration: 'none' }}>
             <div className="nav-avatar"><User size={14} /></div>
             <span>{displayName}</span>
+=======
+            {pendingReminders > 0 && <span className="nav-reminder-badge">{pendingReminders}</span>}
+          </NavLink>
+          <Link to="/dashboard/profile" className="nav-profile" style={{ textDecoration: 'none' }}>
+            <div className="nav-avatar"><User size={14} /></div>
+            <span>{profile.name.split(' ')[0]}</span>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           </Link>
         </div>
 
@@ -124,3 +150,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+<<<<<<< HEAD
+=======
+
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3

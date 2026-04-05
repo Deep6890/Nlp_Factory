@@ -154,6 +154,7 @@
 
 .nav-reminder-badge {
   position: absolute;
+<<<<<<< HEAD
   top: 4px;
   right: 4px;
   background: #ef4444;
@@ -161,6 +162,21 @@
   height: 8px;
   border-radius: 50%;
   border: 1.5px solid rgba(255,253,246,0.9);
+=======
+  top: -2px;
+  right: -2px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,253,246,0.8);
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 }
 
 /* Hamburger — Mobile */

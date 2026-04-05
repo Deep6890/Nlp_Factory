@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+<<<<<<< HEAD
 import { uploadRecording } from '../../api/recordings';
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 import { Square, Pause, Play, Mic, CheckCircle2, Clock, Zap, Upload, FileAudio, X, Music } from 'lucide-react';
 
 const C = {
@@ -8,11 +11,32 @@ const C = {
   textmid: '#4a5a30', textdim: '#8a9a70', shadow: 'rgba(100,140,60,0.11)',
 };
 
+<<<<<<< HEAD
 // Removed hardcoded keywords pool and transcript lines (Backend integration incoming)
 const KEYWORDS_POOL = [];
 const TRANSCRIPT_LINES = [];
 
 /* ── Idle Visualizer Bars — ambient pulsing ── */
+=======
+const TRANSCRIPT_LINES = [
+  { speaker: 'User', text: 'Yaar kitna EMI banega agar 30 lakh ka loan loon?', keywords: ['EMI', 'loan'] },
+  { speaker: 'Friend', text: 'Depends on tenure bhai, kitne saal ke liye?' },
+  { speaker: 'User', text: '7 saal ke liye calculate kar, SIP bhi chal raha hai mera.' , keywords: ['SIP'] },
+  { speaker: 'Friend', text: 'Toh roughly â‚¹46,000 per month hoga EMI...', keywords: ['EMI'] },
+  { speaker: 'User', text: 'Itna afford kar sakta hoon kya? Budget tight hai.', keywords: ['Budget'] },
+  { speaker: 'Friend', text: 'Salary kitni hai teri? 40% rule follow karna chahiye.' },
+];
+
+const KEYWORDS_POOL = [
+  { word: 'EMI', color: '#fef2f2', border: '#fecaca', text: '#dc2626' },
+  { word: 'Loan', color: '#ecfdf5', border: '#a7f3d0', text: '#059669' },
+  { word: 'SIP', color: '#DDEB9D', border: '#A0C878', text: '#4a5a30' },
+  { word: 'Budget', color: '#fefce8', border: '#fde68a', text: '#92400e' },
+  { word: 'Investment', color: '#FAF6E9', border: '#A0C878', text: '#7aaa52' },
+];
+
+/* â”€â”€ Idle Visualizer Bars â€” ambient pulsing â”€â”€ */
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 const IdleBars = () => {
   const COUNT = 32;
   return (
@@ -63,6 +87,7 @@ const LiveDetection = () => {
   const [micHover, setMicHover] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+<<<<<<< HEAD
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState(null); // { success, message }
   const timerRef = useRef(null);
@@ -70,6 +95,11 @@ const LiveDetection = () => {
   const fileInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+=======
+  const timerRef = useRef(null);
+  const transcriptRef = useRef(null);
+  const fileInputRef = useRef(null);
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 
   /* â”€â”€ timer â”€â”€ */
   useEffect(() => {
@@ -122,6 +152,7 @@ const LiveDetection = () => {
     return () => clearInterval(id);
   }, [status]);
 
+<<<<<<< HEAD
   const handleStart = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -175,6 +206,19 @@ const LiveDetection = () => {
       setStatus('idle');
     }
   };
+=======
+  const handleStart = () => {
+    setStatus('recording');
+    setElapsed(0);
+    setTranscriptIdx(0);
+    setDetectedKeywords([]);
+    setEmotions({ Hesitant: 20, Stressed: 15, Confident: 65 });
+    setBars(Array(14).fill(4));
+  };
+  const handlePause  = () => setStatus('paused');
+  const handleResume = () => setStatus('recording');
+  const handleStop   = () => setStatus('stopped');
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 
   /* ── File upload handlers ── */
   const handleFileUpload = (e) => {
@@ -199,6 +243,7 @@ const LiveDetection = () => {
 
   const handleRemoveFile = () => {
     setUploadedFile(null);
+<<<<<<< HEAD
     setUploadResult(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -223,6 +268,11 @@ const LiveDetection = () => {
     }
   };
 
+=======
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
   const formatFileSize = (bytes) => {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
@@ -354,16 +404,26 @@ const LiveDetection = () => {
                   {formatFileSize(uploadedFile.size)} · {uploadedFile.type.split('/')[1]?.toUpperCase()}
                 </span>
               </div>
+<<<<<<< HEAD
               <button className="ld-file-remove" onClick={handleRemoveFile} disabled={uploading}>
                 <X size={14} />
               </button>
               <button className="ld-file-analyze" onClick={handleAnalyzeUpload} disabled={uploading}>
                 <FileAudio size={14} />
                 {uploading ? 'Uploading…' : 'Analyze'}
+=======
+              <button className="ld-file-remove" onClick={handleRemoveFile}>
+                <X size={14} />
+              </button>
+              <button className="ld-file-analyze" onClick={handleStart}>
+                <FileAudio size={14} />
+                Analyze
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               </button>
             </div>
           )}
 
+<<<<<<< HEAD
           {/* Upload result feedback */}
           {uploadResult && (
             <div style={{
@@ -376,6 +436,8 @@ const LiveDetection = () => {
             </div>
           )}
 
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           {/* Drop zone hint */}
           {!uploadedFile && (
             <div
@@ -513,6 +575,7 @@ const LiveDetection = () => {
             </div>
 
             {/* Emotions */}
+<<<<<<< HEAD
             <div style={{ ...card, flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
                 <Zap size={14} color={C.greendk} />
@@ -538,6 +601,92 @@ const LiveDetection = () => {
                     <div style={{ width: 36, fontSize: 12, fontWeight: 700, color: C.textmid, textAlign: 'right' }}>
                       {Math.round(val)}%
                     </div>
+=======
+            <div style={{ ...card, alignSelf: 'flex-start', padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Zap size={13} color={C.greendk} />
+                  <h3 style={{ fontSize: 11, fontWeight: 700, color: C.textdim, textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                    Live Emotion Analysis
+                  </h3>
+                </div>
+                {status === 'recording' && (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, color: C.greendk }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.greendk, display: 'inline-block', animation: 'livePulse 1.6s ease-out infinite' }} />
+                    LIVE
+                  </span>
+                )}
+              </div>
+
+              {/* Vertical bar chart — fixed layout, no flex stretch */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 12, height: 90, padding: '0 8px', position: 'relative' }}>
+
+                {/* Grid lines */}
+                {[25, 50, 75, 100].map(pct => (
+                  <div key={pct} style={{
+                    position: 'absolute', left: 0, right: 0,
+                    bottom: `${pct}%`, height: 1,
+                    background: 'rgba(160,200,120,0.10)',
+                    pointerEvents: 'none',
+                  }} />
+                ))}
+
+                {[
+                  { label: 'Hesitant',  val: emotions.Hesitant,  color: '#e0a020', light: 'rgba(224,160,32,0.10)' },
+                  { label: 'Stressed',  val: emotions.Stressed,  color: '#dc2626', light: 'rgba(220,38,38,0.10)'  },
+                  { label: 'Confident', val: emotions.Confident, color: C.greendk, light: 'rgba(122,170,82,0.12)' },
+                ].map(({ label, val, color, light }) => {
+                  const CHART_H = 90;
+                  const barH = (Math.round(val) / 100) * CHART_H;
+                  return (
+                    <div key={label} style={{ width: 58, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', position: 'relative', flexShrink: 0 }}>
+
+                      {/* Value label floats above bar */}
+                      <span style={{
+                        position: 'absolute',
+                        bottom: barH + 5,
+                        fontSize: 11, fontWeight: 800, color,
+                        transition: 'bottom 0.6s cubic-bezier(0.22,1,0.36,1)',
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'none',
+                      }}>{Math.round(val)}%</span>
+
+                      {/* Bar fill */}
+                      <div style={{
+                        width: 18,
+                        height: barH,
+                        background: color,
+                        borderRadius: '4px 4px 2px 2px',
+                        transition: 'height 0.6s cubic-bezier(0.22,1,0.36,1)',
+                        position: 'relative',
+                        zIndex: 2,
+                      }} />
+
+                      {/* Track */}
+                      <div style={{
+                        position: 'absolute', bottom: 0,
+                        left: '50%', transform: 'translateX(-50%)',
+                        width: 18, height: '100%',
+                        background: light, borderRadius: '4px 4px 2px 2px', zIndex: 1,
+                      }} />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Baseline */}
+              <div style={{ height: 1, background: 'rgba(160,200,120,0.20)', borderRadius: 2, margin: '0 8px' }} />
+
+              {/* X-axis labels */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 12, padding: '6px 8px 0' }}>
+                {[
+                  { label: 'Hesitant', color: '#e0a020' },
+                  { label: 'Stressed', color: '#dc2626' },
+                  { label: 'Confident', color: C.greendk },
+                ].map(({ label, color }) => (
+                  <div key={label} style={{ width: 58, textAlign: 'center' }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color }}>{label}</span>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
                   </div>
                 ))}
               </div>

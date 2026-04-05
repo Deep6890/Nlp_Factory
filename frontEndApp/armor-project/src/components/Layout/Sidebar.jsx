@@ -2,10 +2,18 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, History, CircleDot, BarChart2, Hexagon, Bell, AlertTriangle, FileText, ShieldCheck, LogOut } from 'lucide-react';
 import LogoutModal from '../Common/LogoutModal';
+<<<<<<< HEAD
+=======
+import { useApp } from '../../context/AppContext';
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 import './Layout.css';
 
 const Sidebar = ({ isOpen = true }) => {
   const [showLogout, setShowLogout] = useState(false);
+<<<<<<< HEAD
+=======
+  const { pendingReminders, highAlerts } = useApp();
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
   
   const mainItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -19,8 +27,13 @@ const Sidebar = ({ isOpen = true }) => {
   ];
 
   const actionsItems = [
+<<<<<<< HEAD
     { name: 'Reminders', path: '/dashboard/reminders', icon: <Bell size={20} />, counter: 3 },
     { name: 'Risk Alerts', path: '/dashboard/alerts', icon: <AlertTriangle size={20} />, counter: 2 },
+=======
+    { name: 'Reminders', path: '/dashboard/reminders', icon: <Bell size={20} />, counter: pendingReminders },
+    { name: 'Risk Alerts', path: '/dashboard/alerts', icon: <AlertTriangle size={20} />, counter: highAlerts },
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     { name: 'Reports', path: '/dashboard/reports', icon: <FileText size={20} /> },
   ];
 

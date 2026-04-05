@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
+<<<<<<< HEAD
 import { useAuth } from '../../../context/AuthContext';
 import { registerUser } from '../../../api/auth';
 import '../Login/index.css';
@@ -41,6 +42,24 @@ const Register = () => {
     } finally {
       setLoading(false);
     }
+=======
+import '../Login/index.css';
+
+const Register = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    navigate('/');
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
   };
 
   return (
@@ -52,6 +71,7 @@ const Register = () => {
         <div className="auth-card">
           <h2>Create Account</h2>
           <p className="subtitle">Join Armor.ai to power up your life</p>
+<<<<<<< HEAD
 
           {error && (
             <div style={{
@@ -67,43 +87,76 @@ const Register = () => {
               <label>Full Name</label>
               <input
                 type="text"
+=======
+          
+          <form onSubmit={handleRegister} className="auth-form">
+            <div className="input-group">
+              <label>Full Name</label>
+              <input 
+                type="text" 
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
                 placeholder="Alex Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               />
             </div>
             <div className="input-group">
               <label>Email Address</label>
+<<<<<<< HEAD
               <input
                 type="email"
+=======
+              <input 
+                type="email" 
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
                 placeholder="alex@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               />
             </div>
             <div className="input-group">
               <label>Password</label>
+<<<<<<< HEAD
               <input
                 type="password"
+=======
+              <input 
+                type="password" 
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               />
             </div>
             <div className="input-group">
               <label>Confirm Password</label>
+<<<<<<< HEAD
               <input
                 type="password"
+=======
+              <input 
+                type="password" 
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
               />
             </div>
@@ -113,6 +166,14 @@ const Register = () => {
             </button>
           </form>
 
+=======
+              />
+            </div>
+            
+            <button type="submit" className="btn-auth">Sign Up <span>→</span></button>
+          </form>
+          
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           <p className="auth-footer">
             Already have an account? <Link to="/login">Login here</Link>
           </p>

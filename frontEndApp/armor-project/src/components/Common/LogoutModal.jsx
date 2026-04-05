@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, X, ShieldAlert } from 'lucide-react';
+<<<<<<< HEAD
 import { useAuth } from '../../context/AuthContext';
 import './LogoutModal.css';
 
@@ -11,18 +12,44 @@ const LogoutModal = ({ isOpen, onClose }) => {
   // Lock body scroll when modal is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
+=======
+import './LogoutModal.css';
+
+const LogoutModal = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   // Close on Escape key
   useEffect(() => {
+<<<<<<< HEAD
     const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+=======
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     if (isOpen) window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, [isOpen, onClose]);
 
   const handleLogout = () => {
+<<<<<<< HEAD
     logout();      // clears token + user from context & localStorage
+=======
+    // Clear any stored auth data
+    localStorage.clear();
+    sessionStorage.clear();
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     onClose();
     navigate('/');
   };
@@ -32,7 +59,11 @@ const LogoutModal = ({ isOpen, onClose }) => {
   return (
     <div className="logout-modal-overlay" onClick={onClose}>
       <div className="logout-modal-content" onClick={(e) => e.stopPropagation()}>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
         {/* Close Button */}
         <button className="logout-modal-close" onClick={onClose} aria-label="Close">
           <X size={18} />

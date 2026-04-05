@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { useAuth } from '../../../context/AuthContext';
 import { loginUser } from '../../../api/auth';
 import './index.css';
@@ -27,6 +28,22 @@ const Login = () => {
       setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
+=======
+import { ShieldCheck } from 'lucide-react';
+import './index.css';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (email === 'maghrolamayur@gmail.com' && password === 'Mayur@7777') {
+      navigate('/dashboard');
+    } else {
+      alert('Invalid email or password.');
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     }
   };
 
@@ -40,6 +57,7 @@ const Login = () => {
           <h2>Welcome Back</h2>
           <p className="subtitle">Login to your AI dashboard</p>
 
+<<<<<<< HEAD
           {error && (
             <div style={{
               background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626',
@@ -49,6 +67,8 @@ const Login = () => {
             </div>
           )}
 
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           <form onSubmit={handleLogin} className="auth-form">
             <div className="input-group">
               <label>Email Address</label>
@@ -58,7 +78,10 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               />
             </div>
             <div className="input-group">
@@ -69,16 +92,23 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+<<<<<<< HEAD
                 disabled={loading}
+=======
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
               />
             </div>
             <div className="forgot-password">
               <a href="#!">Forgot Password?</a>
             </div>
 
+<<<<<<< HEAD
             <button type="submit" className="btn-auth" disabled={loading}>
               {loading ? 'Logging in…' : 'Login'} <span>→</span>
             </button>
+=======
+            <button type="submit" className="btn-auth">Login <span>→</span></button>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
           </form>
 
           <p className="auth-footer">

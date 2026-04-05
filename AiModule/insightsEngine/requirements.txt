@@ -1,0 +1,6 @@
+langdetect
+textblob
+spacy
+pydantic
+openai
+python-dotenv

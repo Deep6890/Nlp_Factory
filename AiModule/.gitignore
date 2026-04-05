@@ -1,0 +1,150 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.pyc
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+MANIFEST
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+venv/
+venv*/
+.venv/
+.venv*/
+env/
+ENV/
+env.bak/
+venv.bak/
+**/venv312/
+**/venv*/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# ── Type checking ─────────────────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+
+# ── Secrets / credentials ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+config_local.py
+
+# ── Large AI / ML model files ─────────────────────────────────────────────────
+# HuggingFace model cache (Whisper, etc.)
+**/model_cache/
+**/.cache/huggingface/
+**/models--openai--*/
+**/models--facebook--*/
+**/models--ai4bharat--*/
+**/.locks/
+
+# FastText models
+*.bin
+*.ftz
+*.vec
+
+# PyTorch / TensorFlow / ONNX weights
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.pb
+*.h5
+*.hdf5
+*.tflite
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+
+# NeMo / Conformer checkpoints
+*.nemo
+*.ckpt
+
+# ── Audio files (uploaded/processed recordings) ───────────────────────────────
+uploads/
+recordings/
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.m4a
+*.opus
+# Keep example/test audio if explicitly added
+!examples/*.wav
+!examples/*.mp3
+
+# ── Logs & temp ───────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+logs/
+tmp/
+
+# ── OS generated ──────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.suo
+*.user
+.vs/
+
+# ── Node.js (server inside my_app) ───────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Specific to this project ──────────────────────────────────────────────────
+# Keep requirements.txt and source, ignore everything generated/downloaded
+SpeechToText/model_cache/
+TextToLang/venv312/
+TextToLang/models/*.bin
+LangtextToEng/lid.176.ftz

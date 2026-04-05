@@ -1,10 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+<<<<<<< HEAD
 
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Common/Navbar';
 
+=======
+import { AppProvider } from './context/AppContext';
+
+// Layout
+import Navbar from './components/Common/Navbar';
+
+// Public & Auth
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 import LandingPage from './components/Public/LandingPage';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
@@ -20,6 +29,7 @@ import Decisions from './components/Dashboard/Decisions';
 import Reminders from './components/Dashboard/Reminders';
 import Alerts from './components/Dashboard/Alerts';
 import Reports from './components/Dashboard/Reports';
+<<<<<<< HEAD
 import Analytics from './components/Dashboard/Analytics';
 
 const DashboardLayout = () => (
@@ -64,6 +74,50 @@ function App() {
         </Routes>
       </Router>
     </AuthProvider>
+=======
+
+const DashboardLayout = () => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#FFFDF6' }}>
+      <Navbar />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px 40px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <Outlet />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AppProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Main />} />
+          <Route path="history" element={<Sessions />} />
+          <Route path="live" element={<LiveDetection />} />
+          <Route path="sessions" element={<Sessions />} />
+          <Route path="sessions/:id" element={<SessionDetail />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="insights" element={<Insights />} />
+          <Route path="decisions" element={<Decisions />} />
+          <Route path="reminders" element={<Reminders />} />
+          <Route path="alerts" element={<Alerts />} />
+          <Route path="reports" element={<Reports />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+    </AppProvider>
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
   );
 }
 

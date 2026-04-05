@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Circle, CheckCircle2, Navigation, Plus, X } from 'lucide-react';
+<<<<<<< HEAD
+=======
+import { useApp } from '../../context/AppContext';
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 
 const Reminders = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [showAddForm, setShowAddForm] = useState(false);
+<<<<<<< HEAD
   
   // Form state
   const [newTitle, setNewTitle] = useState('');
@@ -26,6 +31,18 @@ const Reminders = () => {
           badgeBg: 'bg-teal-50',
           customDesc: 'Marked done (Date passed)'
         };
+=======
+  const [newTitle, setNewTitle] = useState('');
+  const [newDate, setNewDate] = useState('');
+  const { reminders: remindersData, setReminders: setRemindersData, addReminder, toggleReminder } = useApp();
+
+  // Auto-mark passed dates as done
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    setRemindersData(prev => prev.map(rem => {
+      if (!rem.completed && rem.dueDate && rem.dueDate < todayStr) {
+        return { ...rem, completed: true, status: 'Done', badgeClass: 'Auto-Done', badgeColor: 'text-teal-600', badgeBg: 'bg-teal-50', customDesc: 'Marked done (Date passed)' };
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
       }
       return rem;
     }));
@@ -34,6 +51,7 @@ const Reminders = () => {
   const handleAddReminder = (e) => {
     e.preventDefault();
     if (!newTitle.trim() || !newDate) return;
+<<<<<<< HEAD
 
     const newReminder = {
       id: Date.now(),
@@ -48,11 +66,15 @@ const Reminders = () => {
     };
 
     setRemindersData([newReminder, ...remindersData]);
+=======
+    addReminder({ id: Date.now(), title: newTitle, status: 'Pending', dueDate: newDate, session: 'User Added', badgeClass: 'New', badgeColor: 'text-slate-900', badgeBg: 'bg-[#c7f284]', completed: false });
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
     setNewTitle('');
     setNewDate('');
     setShowAddForm(false);
   };
 
+<<<<<<< HEAD
   const toggleStatus = (id) => {
     setRemindersData(prev => prev.map(rem => {
       if (rem.id === id) {
@@ -70,6 +92,9 @@ const Reminders = () => {
       return rem;
     }));
   };
+=======
+  const toggleStatus = (id) => toggleReminder(id);
+>>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
 
   const filteredReminders = remindersData.filter(d => {
     if (activeTab === 'All') return true;

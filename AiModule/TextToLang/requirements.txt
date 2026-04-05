@@ -1,0 +1,11 @@
+# fastText + CLD3 hybrid language detector
+# All free & open source, fully offline
+
+# CLD3 role — Rust-based, high accuracy (Apache 2.0)
+lingua-language-detector>=2.2.0
+
+# fastText role — pure Python fallback (Apache 2.0)
+langdetect>=1.0.9
+
+# Native fastText (requires MSVC on Windows + Python <=3.12)
+# pip install fasttext-wheel
