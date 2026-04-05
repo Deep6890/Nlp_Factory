@@ -1,0 +1,2 @@
+# This directory holds the fastText model files (lid.176.bin / lid.176.ftz)
+# Download with: python main.py --download-model
