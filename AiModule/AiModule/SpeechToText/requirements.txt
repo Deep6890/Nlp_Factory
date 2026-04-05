@@ -1,0 +1,48 @@
+# ============================================================
+# Indic Speech-to-Text - All Model Families
+# ============================================================
+
+# --- Core ML / Inference ---
+torch>=2.1.0
+torchaudio>=2.1.0
+transformers>=4.40.0
+huggingface_hub>=0.22.0
+accelerate>=0.28.0
+sentencepiece>=0.1.99
+protobuf>=3.20.0
+
+# --- Audio Processing ---
+librosa>=0.10.1
+soundfile>=0.12.1
+pyaudio>=0.2.14
+webrtcvad>=2.0.10
+numpy>=1.24.0
+scipy>=1.11.0
+
+# --- IndicConformer (NeMo-based) ---
+# NeMo is heavy; install separately via: pip install nemo_toolkit[asr]
+# Or use the AI4Bharat fork: see setup_nemo.sh
+# Lightweight fallback via ONNX is included in models/conformer_onnx.py
+
+# --- IndicWhisper (Whisper + Transformers) ---
+openai-whisper>=20231117
+datasets>=2.18.0
+
+# --- IndicWav2Vec (Transformers CTC) ---
+# No extra deps; uses transformers above
+
+# --- API Server ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+python-multipart>=0.0.9
+websockets>=12.0
+
+# --- Language Detection ---
+langdetect>=1.0.9
+
+# --- Utilities ---
+tqdm>=4.66.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.1
+rich>=13.7.0
+click>=8.1.7
