@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 function readMeta(filename) {
-  const metaPath = path.join(UPLOADS_DIR, filename.replace('.m4a', '.json'));
+  const metaPath = path.join(UPLOADS_DIR, filename.replace(/\.(m4a|webm|wav|mp3|ogg)$/, '.json'));
   try {
     if (fs.existsSync(metaPath)) {
       return JSON.parse(fs.readFileSync(metaPath, 'utf8'));
@@ -31,7 +31,11 @@ function readMeta(filename) {
   return {};
 }
 
-function modeLabel(mode) {
+const AUDIO_EXTS = ['.m4a', '.webm', '.wav', '.mp3', '.ogg'];
+
+function isAudioFile(f) {
+  return AUDIO_EXTS.some(ext => f.endsWith(ext));
+}
   return mode === 'adaptive' ? 'Adaptive' : 'Legacy';
 }
 
@@ -40,13 +44,13 @@ function scheduleAutoDelete() {
     const now = Date.now();
     try {
       fs.readdirSync(UPLOADS_DIR)
-        .filter(f => f.endsWith('.m4a'))
+        .filter(f => isAudioFile(f))
         .forEach(f => {
           const fp = path.join(UPLOADS_DIR, f);
           const stat = fs.statSync(fp);
           if (now - stat.mtimeMs > AUTO_DELETE_MS) {
             fs.unlinkSync(fp);
-            const meta = fp.replace('.m4a', '.json');
+            const meta = fp.replace(/\.(m4a|webm|wav|mp3|ogg)$/, '.json');
             if (fs.existsSync(meta)) fs.unlinkSync(meta);
             console.log(`[AUTO-DELETE] ${f}`);
           }
@@ -59,7 +63,7 @@ function scheduleAutoDelete() {
 scheduleAutoDelete();
 
 app.get('/', (_, res) => {
-  const files = fs.readdirSync(UPLOADS_DIR).filter(f => f.endsWith('.m4a'));
+  const files = fs.readdirSync(UPLOADS_DIR).filter(f => isAudioFile(f));
   const rows = files.map(f => {
     const stat = fs.statSync(path.join(UPLOADS_DIR, f));
     const meta = readMeta(f);
@@ -113,7 +117,7 @@ app.get('/', (_, res) => {
 </head>
 <body>
   <h1>Armor<span>.ai</span></h1>
-  <p class="sub">Adaptive recording server · <span class="badge">Live</span> · files auto-delete after 1h</p>
+  <p class="sub">Adaptive recording server ï¿½ <span class="badge">Live</span> ï¿½ files auto-delete after 1h</p>
   <div class="stats">
     <div class="stat"><div class="stat-n">${files.length}</div><div class="stat-l">Recordings</div></div>
     <div class="stat"><div class="stat-n">${(files.reduce((s, f) => s + fs.statSync(path.join(UPLOADS_DIR, f)).size, 0) / 1024).toFixed(0)} KB</div><div class="stat-l">Total size</div></div>
@@ -134,7 +138,7 @@ app.post('/upload', (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file received' });
 
     const mode = req.body.mode || 'adaptive';
-    const metaPath = req.file.path.replace('.m4a', '.json');
+    const metaPath = req.file.path.replace(/\.(m4a|webm|wav|mp3|ogg)$/, '.json');
     fs.writeFileSync(metaPath, JSON.stringify({
       id: req.body.id,
       mode,
@@ -152,7 +156,7 @@ app.post('/upload', (req, res) => {
 });
 
 app.get('/recordings', (_, res) => {
-  const files = fs.readdirSync(UPLOADS_DIR).filter(f => f.endsWith('.m4a'));
+  const files = fs.readdirSync(UPLOADS_DIR).filter(f => isAudioFile(f));
   const list = files.map(f => {
     const stat = fs.statSync(path.join(UPLOADS_DIR, f));
     const meta = readMeta(f);
@@ -175,7 +179,9 @@ app.get('/recordings', (_, res) => {
 app.get('/recordings/:filename', (req, res) => {
   const fp = path.join(UPLOADS_DIR, req.params.filename);
   if (!fs.existsSync(fp)) return res.status(404).json({ error: 'Not found' });
-  res.setHeader('Content-Type', 'audio/mp4');
+  const ext = path.extname(req.params.filename).toLowerCase();
+  const mimeMap = { '.m4a': 'audio/mp4', '.webm': 'audio/webm', '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg' };
+  res.setHeader('Content-Type', mimeMap[ext] || 'audio/octet-stream');
   fs.createReadStream(fp).pipe(res);
 });
 
@@ -183,9 +189,39 @@ app.delete('/recordings/:filename', (req, res) => {
   const fp = path.join(UPLOADS_DIR, req.params.filename);
   if (!fs.existsSync(fp)) return res.status(404).json({ error: 'Not found' });
   fs.unlinkSync(fp);
-  const meta = fp.replace('.m4a', '.json');
+  const meta = fp.replace(/\.(m4a|webm|wav|mp3|ogg)$/, '.json');
   if (fs.existsSync(meta)) fs.unlinkSync(meta);
   res.json({ ok: true });
+});
+
+app.post('/analyze', (req, res) => {
+  upload.single('file')(req, res, err => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!req.file) return res.status(400).json({ error: 'No file received' });
+
+    // Save the file same as /upload
+    const metaPath = req.file.path.replace(/\.(m4a|webm|wav|mp3|ogg)$/, '.json');
+    fs.writeFileSync(metaPath, JSON.stringify({
+      id: req.body.id || Date.now().toString(),
+      mode: req.body.mode || 'adaptive',
+      timestamp: req.body.timestamp || new Date().toISOString(),
+      recordedAt: req.body.recordedAt || req.body.timestamp || new Date().toISOString(),
+      durationSec: Number(req.body.durationSec || 0),
+      filename: req.file.filename,
+    }));
+
+    console.log(`[ANALYZE] ${req.file.filename} size=${req.file.size}`);
+
+    // Return stub analysis â€” replace with real STT/NLP later
+    res.json({
+      ok: true,
+      filename: req.file.filename,
+      transcript: '',
+      keywords: [],
+      emotions: [],
+      message: 'File received. Connect STT/NLP pipeline to process.',
+    });
+  });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
