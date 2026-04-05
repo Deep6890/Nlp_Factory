@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════════
+   ARMOR.AI — GLOBAL GLASSMORPHISM SYSTEM
+   Theme: Cream #F5F5EC · Lime #7DC842 · Dark #1C2B1A
+   ═══════════════════════════════════════════════ */
+
+/* ── Reusable glass classes ── */
+.glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+.glass-medium {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.glass-heavy {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.glass-lime {
+  background: rgba(125, 200, 66, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(125, 200, 66, 0.35);
+  box-shadow: 0 8px 32px rgba(125, 200, 66, 0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Background blobs (fixed, behind everything) ── */
+.glass-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.glass-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glass-blob-1 {
+  width: 520px;
+  height: 520px;
+  top: -120px;
+  right: -100px;
+  background: rgba(125, 200, 66, 0.15);
+}
+
+.glass-blob-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -80px;
+  left: -80px;
+  background: rgba(28, 43, 26, 0.08);
+}
+
+.glass-blob-3 {
+  width: 600px;
+  height: 600px;
+  top: 40%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.5);
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Lightbulb, Wallet, ArrowRight, BrainCircuit, TrendingDown, Activity, Filter, Bell, X, Clock, Eye } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const C = {
   cream: '#FFFDF6', cream2: '#FAF6E9', limelt: '#DDEB9D',
@@ -7,73 +8,31 @@ const C = {
   textmid: '#4a5a30', textdim: '#8a9a70', shadow: 'rgba(100,140,60,0.11)',
 };
 
-const ALERTS = [
-  {
-    id: 1, category: 'EMI Risk', Icon: AlertTriangle,
-    iconBg: '#1a2010', iconColor: '#fff',
-    title: 'EMI Exceeds 40% Salary Threshold',
-    level: 'HIGH', levelBg: '#fef2f2', levelColor: '#dc2626', levelBorder: '#fecaca',
-    body: 'Your projected EMI of ₹48,000 is 53% of your ₹90,000 salary. This exceeds the safe limit of 40%.',
-    from: 'Home Loan Discussion', date: 'Jan 31', time: '2:34 PM',
-    impact: 85,
-  },
-  {
-    id: 2, category: 'EMI Risk', Icon: Lightbulb,
-    iconBg: C.cream2, iconColor: C.textmid,
-    title: 'Car EMI Added on Top of Home Loan',
-    level: 'MED', levelBg: '#fefce8', levelColor: '#92400e', levelBorder: '#fde68a',
-    body: 'A car loan is being reconsidered while home loan EMI is already at risk. Combined EMI would reach 65%+.',
-    from: 'Car EMI Conversation', date: 'Jan 29', time: '11:15 AM',
-    impact: 62,
-  },
-  {
-    id: 3, category: 'Emotion Risk', Icon: BrainCircuit,
-    iconBg: C.cream2, iconColor: C.textmid,
-    title: 'Emotion-Driven Decision Detected',
-    level: 'MED', levelBg: '#fefce8', levelColor: '#92400e', levelBorder: '#fde68a',
-    body: 'High stress (60%) and uncertainty (75%) detected during Home Loan discussion. Decisions under stress may be suboptimal.',
-    from: 'Home Loan Discussion', date: 'Jan 31', time: '2:50 PM',
-    impact: 55,
-  },
-  {
-    id: 4, category: 'Savings Risk', Icon: Wallet,
-    iconBg: C.cream2, iconColor: C.textmid,
-    title: 'SIP May Be Discontinued',
-    level: 'LOW', levelBg: C.limelt, levelColor: C.greendk, levelBorder: C.green,
-    body: 'Conversation indicates SIP might be stopped if home loan is approved. This would eliminate your only active savings instrument.',
-    from: 'Home Loan Discussion', date: 'Jan 31', time: '3:02 PM',
-    impact: 35,
-  },
-  {
-    id: 5, category: 'EMI Risk', Icon: TrendingDown,
-    iconBg: '#fef2f2', iconColor: '#dc2626',
-    title: 'Debt-to-Income Ratio Critical',
-    level: 'HIGH', levelBg: '#fef2f2', levelColor: '#dc2626', levelBorder: '#fecaca',
-    body: 'Total monthly debt obligations are reaching 70% of net income. This puts severe pressure on emergency fund capacity.',
-    from: 'Financial Overview', date: 'Feb 2', time: '10:22 AM',
-    impact: 90,
-  },
-  {
-    id: 6, category: 'Emotion Risk', Icon: Activity,
-    iconBg: '#fefce8', iconColor: '#92400e',
-    title: 'Impulsive Spending Pattern',
-    level: 'LOW', levelBg: C.limelt, levelColor: C.greendk, levelBorder: C.green,
-    body: 'Multiple discretionary purchases flagged during high-stress conversations. Spending correlates with emotional state.',
-    from: 'Shopping Discussion', date: 'Feb 1', time: '6:45 PM',
-    impact: 28,
-  },
-];
-
 const CATEGORIES = ['All', 'EMI Risk', 'Savings Risk', 'Emotion Risk'];
 
-const getCategoryCount = (cat) => cat === 'All' ? ALERTS.length : ALERTS.filter(a => a.category === cat).length;
-const getLevelCount = (level) => ALERTS.filter(a => a.level === level).length;
+const ALERT_ICONS = [AlertTriangle, Lightbulb, BrainCircuit, Wallet, TrendingDown, Activity];
+
+const LEVEL_STYLE = {
+  HIGH: { iconBg: '#1a2010', iconColor: '#fff',    levelBg: '#fef2f2', levelColor: '#dc2626', levelBorder: '#fecaca' },
+  MED:  { iconBg: '#FAF6E9', iconColor: '#4a5a30', levelBg: '#fefce8', levelColor: '#92400e', levelBorder: '#fde68a' },
+  LOW:  { iconBg: '#FAF6E9', iconColor: '#4a5a30', levelBg: '#DDEB9D', levelColor: '#7aaa52', levelBorder: '#A0C878' },
+};
 
 const Alerts = () => {
   const [activeFilter, setActiveFilter] = useState('All');
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [animateIn, setAnimateIn] = useState(false);
   const [riskScore, setRiskScore] = useState(0);
+  const { alerts: rawAlerts } = useApp();
+
+  const ALERTS = rawAlerts.map((a, i) => ({
+    ...a,
+    Icon: ALERT_ICONS[i % ALERT_ICONS.length],
+    ...LEVEL_STYLE[a.level],
+  }));
+
+  const getCategoryCount = (cat) => cat === 'All' ? ALERTS.length : ALERTS.filter(a => a.category === cat).length;
+  const getLevelCount = (level) => ALERTS.filter(a => a.level === level).length;
 
   const filtered = activeFilter === 'All' ? ALERTS : ALERTS.filter(a => a.category === activeFilter);
 
@@ -114,7 +73,7 @@ const Alerts = () => {
         </div>
         <div className="ra-header-badge">
           <Bell size={14} />
-          <span>{ALERTS.length} Active</span>
+          <span>{rawAlerts.length} Active</span>
         </div>
       </div>
 
@@ -190,9 +149,6 @@ const Alerts = () => {
             style={{ animationDelay: `${i * 0.08}s` }}
             onClick={() => setSelectedAlert(alert)}
           >
-            {/* Severity indicator stripe */}
-            <div className={`ra-alert-stripe ra-stripe-${alert.level.toLowerCase()}`} />
-
             <div className="ra-alert-content">
               {/* Icon */}
               <div className="ra-alert-icon" style={{ background: alert.iconBg }}>
@@ -213,22 +169,6 @@ const Alerts = () => {
                 </div>
 
                 <p className="ra-alert-desc">{alert.body}</p>
-
-                {/* Impact bar */}
-                <div className="ra-impact-row">
-                  <span className="ra-impact-label">Impact</span>
-                  <div className="ra-impact-track">
-                    <div
-                      className="ra-impact-fill"
-                      style={{
-                        width: animateIn ? `${alert.impact}%` : '0%',
-                        background: alert.impact > 60 ? '#dc2626' : alert.impact > 35 ? '#e0a020' : C.greendk,
-                        transitionDelay: `${i * 0.08 + 0.3}s`,
-                      }}
-                    />
-                  </div>
-                  <span className="ra-impact-val">{alert.impact}%</span>
-                </div>
 
                 {/* Footer */}
                 <div className="ra-alert-footer">
@@ -365,20 +305,33 @@ const Alerts = () => {
           animation: raFadeDown 0.5s ease-out 0.15s both;
         }
         .ra-stat-card {
-          background: #fff;
-          border: 1px solid rgba(160,200,120,0.22);
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.55);
           border-radius: 18px;
           padding: 18px 20px;
           display: flex;
           align-items: center;
           gap: 14px;
-          box-shadow: 0 2px 12px rgba(100,140,60,0.06);
-          transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+          box-shadow: 0 8px 32px rgba(100,140,60,0.10), inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(160,200,120,0.06);
+          transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+          position: relative;
+          overflow: hidden;
+        }
+        .ra-stat-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%);
+          border-radius: inherit;
+          pointer-events: none;
         }
         .ra-stat-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 28px rgba(100,140,60,0.1);
-          border-color: rgba(160,200,120,0.35);
+          transform: translateY(-4px);
+          background: rgba(255,255,255,0.30);
+          box-shadow: 0 16px 48px rgba(100,140,60,0.14), inset 0 1.5px 0 rgba(255,255,255,0.9);
+          border-color: rgba(160,200,120,0.45);
         }
 
         /* Risk Score Ring */
@@ -445,6 +398,13 @@ const Alerts = () => {
           align-items: center;
           gap: 8px;
           animation: raFadeDown 0.5s ease-out 0.25s both;
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.55);
+          border-radius: 16px;
+          padding: 8px 12px;
+          box-shadow: 0 8px 32px rgba(100,140,60,0.08), inset 0 1.5px 0 rgba(255,255,255,0.85);
         }
         .ra-filter-icon {
           color: #8a9a70;
@@ -461,19 +421,26 @@ const Alerts = () => {
           font-family: inherit;
           cursor: pointer;
           transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
-          background: #fff;
+          background: rgba(255,255,255,0.22);
           color: #8a9a70;
-          border: 1px solid rgba(160,200,120,0.22);
+          border: 1px solid rgba(255,255,255,0.45);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
         }
         .ra-filter-btn:hover {
-          background: #FAF6E9;
-          border-color: rgba(160,200,120,0.35);
+          background: rgba(255,255,255,0.35);
+          border-color: rgba(160,200,120,0.40);
           color: #4a5a30;
+          box-shadow: 0 4px 16px rgba(100,140,60,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
         }
         .ra-filter-btn.is-active {
-          background: #DDEB9D;
+          background: rgba(221,235,157,0.65);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           color: #1a2010;
-          border-color: #A0C878;
+          border-color: rgba(160,200,120,0.55);
+          box-shadow: 0 4px 16px rgba(160,200,120,0.18), inset 0 1px 0 rgba(255,255,255,0.8);
         }
         .ra-filter-count {
           font-size: 10px;
@@ -494,42 +461,43 @@ const Alerts = () => {
         }
 
         .ra-alert-card {
-          background: #fff;
-          border: 1px solid rgba(160,200,120,0.18);
+          background: rgba(255,255,255,0.18);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.55);
           border-radius: 18px;
-          box-shadow: 0 2px 12px rgba(100,140,60,0.05);
+          box-shadow: 0 8px 32px rgba(100,140,60,0.09), inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(160,200,120,0.06);
           overflow: hidden;
           display: flex;
           cursor: pointer;
           opacity: 0;
           transform: translateY(16px);
           transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+          position: relative;
+        }
+        .ra-alert-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
+          pointer-events: none;
         }
         .ra-alert-card.is-visible {
           animation: raSlideUp 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
           animation-delay: inherit;
         }
         .ra-alert-card:hover {
-          transform: translateY(-3px) !important;
-          box-shadow: 0 12px 36px rgba(100,140,60,0.1);
-          border-color: rgba(160,200,120,0.35);
+          transform: translateY(-4px) !important;
+          background: rgba(255,255,255,0.30);
+          box-shadow: 0 20px 56px rgba(100,140,60,0.14), inset 0 1.5px 0 rgba(255,255,255,0.9);
+          border-color: rgba(160,200,120,0.45);
         }
 
         @keyframes raSlideUp {
           from { opacity: 0; transform: translateY(16px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-
-        /* Alert stripe */
-        .ra-alert-stripe {
-          width: 4px;
-          flex-shrink: 0;
-          transition: width 0.3s ease;
-        }
-        .ra-alert-card:hover .ra-alert-stripe { width: 6px; }
-        .ra-stripe-high { background: linear-gradient(180deg, #dc2626, #f87171); }
-        .ra-stripe-med  { background: linear-gradient(180deg, #e0a020, #fbbf24); }
-        .ra-stripe-low  { background: linear-gradient(180deg, #7aaa52, #A0C878); }
 
         .ra-alert-content {
           flex: 1;
@@ -682,12 +650,15 @@ const Alerts = () => {
         }
 
         .ra-modal {
-          background: #fff;
+          background: rgba(255,255,255,0.30);
+          backdrop-filter: blur(28px);
+          -webkit-backdrop-filter: blur(28px);
+          border: 1px solid rgba(255,255,255,0.60);
           border-radius: 22px;
           padding: 32px;
           max-width: 520px;
           width: 90%;
-          box-shadow: 0 24px 80px rgba(26,32,16,0.2);
+          box-shadow: 0 24px 80px rgba(26,32,16,0.15), inset 0 1.5px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(160,200,120,0.08);
           position: relative;
           animation: raModalPop 0.35s cubic-bezier(0.22,1,0.36,1);
         }
@@ -753,7 +724,11 @@ const Alerts = () => {
           display: flex;
           flex-direction: column;
           gap: 4px;
-          background: #FAF6E9;
+          background: rgba(255,255,255,0.22);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.55);
+          box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.85);
           padding: 12px 16px;
           border-radius: 12px;
         }

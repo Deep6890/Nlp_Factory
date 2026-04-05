@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Activity, ShieldAlert, PiggyBank, Briefcase, AlertCircle, TrendingUp } from 'lucide-react';
 
 const C = { cream2:'#FAF6E9', limelt:'#DDEB9D', green:'#A0C878', greendk:'#7aaa52', text:'#1a2010', textmid:'#4a5a30', textdim:'#8a9a70', shadow:'rgba(100,140,60,0.11)' };
-const card = { background:'#fff', border:'1px solid rgba(160,200,120,0.22)', borderRadius:20, padding:'22px 24px', boxShadow:`0 2px 16px ${C.shadow}`, transition:'all 0.25s', display:'flex', flexDirection:'column' };
-const hov = e => { e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.borderColor=C.green; };
-const unHov = e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor='rgba(160,200,120,0.22)'; };
-const ib = (a) => ({ width:38, height:38, borderRadius:11, display:'flex', alignItems:'center', justifyContent:'center', background:a?C.limelt:C.cream2, border:`1px solid ${a?C.green:'rgba(160,200,120,0.2)'}`, color:C.text, marginBottom:14, flexShrink:0 });
-const btnStyle = (active) => ({ padding:'7px 18px', borderRadius:12, fontSize:13, fontWeight:700, cursor:'pointer', transition:'all 0.2s', background:active?C.limelt:'#fff', color:active?C.text:C.textmid, border:`1px solid ${active?C.green:'rgba(160,200,120,0.28)'}` });
+const liqGlass = { background:'rgba(255,255,255,0.18)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.55)', boxShadow:'0 8px 32px rgba(100,140,60,0.10), inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(160,200,120,0.08)' };
+const card = { ...liqGlass, borderRadius:20, padding:'22px 24px', transition:'all 0.35s cubic-bezier(0.22,1,0.36,1)', display:'flex', flexDirection:'column', position:'relative', overflow:'hidden' };
+const hov = e => { e.currentTarget.style.transform='translateY(-4px)'; e.currentTarget.style.background='rgba(255,255,255,0.30)'; e.currentTarget.style.boxShadow='0 16px 48px rgba(100,140,60,0.14), inset 0 1.5px 0 rgba(255,255,255,0.9)'; e.currentTarget.style.borderColor='rgba(160,200,120,0.5)'; };
+const unHov = e => { e.currentTarget.style.transform=''; e.currentTarget.style.background='rgba(255,255,255,0.18)'; e.currentTarget.style.boxShadow='0 8px 32px rgba(100,140,60,0.10), inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(160,200,120,0.08)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.55)'; };
+const ib = (a) => ({ width:38, height:38, borderRadius:11, display:'flex', alignItems:'center', justifyContent:'center', background:a?'rgba(221,235,157,0.55)':'rgba(255,255,255,0.30)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)', border:`1px solid ${a?'rgba(160,200,120,0.5)':'rgba(255,255,255,0.6)'}`, boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)', color:C.text, marginBottom:14, flexShrink:0 });
+const btnStyle = (active) => ({ padding:'7px 18px', borderRadius:12, fontSize:13, fontWeight:700, cursor:'pointer', transition:'all 0.25s cubic-bezier(0.22,1,0.36,1)', background:active?'rgba(221,235,157,0.65)':'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', color:active?C.text:C.textmid, border:`1px solid ${active?'rgba(160,200,120,0.55)':'rgba(255,255,255,0.45)'}`, boxShadow:active?'0 4px 16px rgba(160,200,120,0.18), inset 0 1px 0 rgba(255,255,255,0.8)':'inset 0 1px 0 rgba(255,255,255,0.6)' });
 
 const Insights = () => {
   const [tab, setTab] = useState('All');
@@ -20,7 +21,7 @@ const Insights = () => {
       </div>
 
       {/* Snapshot banner — full width */}
-      <div style={{ ...card, flexDirection:'row', alignItems:'flex-start', gap:14 }}
+      <div style={{ ...card, flexDirection:'row', alignItems:'flex-start', gap:14, background:'rgba(125,200,66,0.10)', border:'1px solid rgba(125,200,66,0.30)', boxShadow:'0 8px 32px rgba(100,140,60,0.10), inset 0 1.5px 0 rgba(255,255,255,0.85)' }}
         onMouseEnter={hov} onMouseLeave={unHov}>
         <div style={ib(true)}><Activity size={17}/></div>
         <p style={{ fontSize:13, color:C.textmid, lineHeight:1.7 }}>
@@ -99,7 +100,7 @@ const Insights = () => {
                 <div style={{ fontSize:12, color:C.textdim, marginTop:4 }}>Home loan under evaluation</div>
               </div>
             </div>
-            <div style={{ flex:1, minWidth:200, background:C.cream2, border:'1px solid rgba(160,200,120,0.2)', borderRadius:14, padding:'14px 18px' }}>
+            <div style={{ flex:1, minWidth:200, background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.55)', borderRadius:14, padding:'14px 18px', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)' }}>
               <div style={{ fontSize:12, fontWeight:700, color:C.textmid, marginBottom:8 }}>Tenor: 15 yrs &nbsp;|&nbsp; Rate: 8.5%</div>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <AlertCircle size={13} color={C.textdim}/>

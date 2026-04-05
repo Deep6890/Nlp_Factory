@@ -4,7 +4,7 @@ import { ChevronDown, CheckSquare, Square, FileText, Download, Loader2 } from 'l
 const C = { cream2:'#FAF6E9', limelt:'#DDEB9D', green:'#A0C878', greendk:'#7aaa52', text:'#1a2010', textmid:'#4a5a30', textdim:'#8a9a70' };
 
 const inputCls = 'w-full appearance-none outline-none block font-bold rounded-xl px-4 py-3 transition-all cursor-pointer';
-const inputStyle = { background:'#FAF6E9', border:'1px solid rgba(160,200,120,0.28)', color:'#1a2010', fontSize:14 };
+const inputStyle = { background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.5)', color:'#1a2010', fontSize:14, boxShadow:'inset 0 1px 0 rgba(255,255,255,0.7)' };
 
 const Reports = () => {
   const [fromDate, setFromDate] = useState('2026-01-01');
@@ -44,7 +44,7 @@ const Reports = () => {
       </div>
 
       {/* Generate card */}
-      <div style={{ background:'#fff', border:'1px solid rgba(160,200,120,0.22)', borderRadius:20, padding:'28px 28px 24px', boxShadow:'0 2px 16px rgba(100,140,60,0.08)' }}>
+      <div style={{ background:'rgba(255,255,255,0.18)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.55)', borderRadius:20, padding:'28px 28px 24px', boxShadow:'0 8px 32px rgba(100,140,60,0.10), inset 0 1.5px 0 rgba(255,255,255,0.85)' }}>
         <h3 style={{ fontSize:16, fontWeight:800, color:C.text, marginBottom:22 }}>Generate New Report</h3>
 
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))', gap:16, marginBottom:24 }}>
@@ -96,11 +96,11 @@ const Reports = () => {
         <h3 style={{ fontSize:15, fontWeight:800, color:C.text, marginBottom:14 }}>Recent Reports</h3>
         <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
           {reports.map(r => (
-            <div key={r.id} style={{ background:'#fff', border:'1px solid rgba(160,200,120,0.22)', borderRadius:18, padding:'18px 22px', display:'flex', justifyContent:'space-between', alignItems:'center', gap:16, boxShadow:'0 2px 12px rgba(100,140,60,0.07)', transition:'all 0.2s', flexWrap:'wrap' }}
+            <div key={r.id} style={{ background:'rgba(255,255,255,0.18)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', border:'1px solid rgba(255,255,255,0.55)', borderRadius:18, padding:'18px 22px', display:'flex', justifyContent:'space-between', alignItems:'center', gap:16, boxShadow:'0 8px 32px rgba(100,140,60,0.08), inset 0 1.5px 0 rgba(255,255,255,0.85)', transition:'all 0.35s cubic-bezier(0.22,1,0.36,1)', flexWrap:'wrap' }}
               onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='#A0C878'; }}
               onMouseLeave={e => { e.currentTarget.style.transform=''; e.currentTarget.style.borderColor='rgba(160,200,120,0.22)'; }}>
               <div style={{ display:'flex', gap:14, alignItems:'center' }}>
-                <div style={{ width:44, height:44, borderRadius:14, background: r.accent ? '#DDEB9D' : '#FAF6E9', display:'flex', alignItems:'center', justifyContent:'center', color:C.text, flexShrink:0 }}>
+                <div style={{ width:44, height:44, borderRadius:14, background: r.accent ? 'rgba(221,235,157,0.55)' : 'rgba(255,255,255,0.30)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)', border:'1px solid rgba(255,255,255,0.6)', boxShadow:'inset 0 1px 0 rgba(255,255,255,0.8)', display:'flex', alignItems:'center', justifyContent:'center', color:C.text, flexShrink:0 }}>
                   <FileText size={19} />
                 </div>
                 <div>
@@ -109,12 +109,14 @@ const Reports = () => {
                 </div>
               </div>
               <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                <span style={{ fontSize:11, fontWeight:800, background:'#FAF6E9', color:C.textmid, border:'1px solid rgba(160,200,120,0.2)', padding:'3px 10px', borderRadius:8 }}>PDF</span>
+                <span style={{ fontSize:11, fontWeight:800, background:'rgba(255,255,255,0.30)', backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)', border:'1px solid rgba(255,255,255,0.5)', color:C.textmid, padding:'3px 10px', borderRadius:8, boxShadow:'inset 0 1px 0 rgba(255,255,255,0.7)' }}>PDF</span>
                 <button onClick={() => alert(`Downloading ${r.title}`)} style={{
                   display:'inline-flex', alignItems:'center', gap:6,
-                  background:'#FAF6E9', border:'1px solid rgba(160,200,120,0.28)',
+                  background:'rgba(255,255,255,0.22)', backdropFilter:'blur(12px)', WebkitBackdropFilter:'blur(12px)',
+                  border:'1px solid rgba(255,255,255,0.5)',
                   color:C.textmid, padding:'8px 16px', borderRadius:10,
-                  fontSize:13, fontWeight:700, cursor:'pointer', transition:'all 0.2s',
+                  fontSize:13, fontWeight:700, cursor:'pointer', transition:'all 0.25s cubic-bezier(0.22,1,0.36,1)',
+                  boxShadow:'inset 0 1px 0 rgba(255,255,255,0.7)',
                 }}
                   onMouseEnter={e => { e.currentTarget.style.background='#DDEB9D'; e.currentTarget.style.color=C.text; }}
                   onMouseLeave={e => { e.currentTarget.style.background='#FAF6E9'; e.currentTarget.style.color=C.textmid; }}>

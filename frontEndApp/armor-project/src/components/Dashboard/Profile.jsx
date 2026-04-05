@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
 import { User, MapPin, Mail, Wallet, CreditCard, Landmark, Phone, Save, Edit3, X, LogOut } from 'lucide-react';
 import LogoutModal from '../Common/LogoutModal';
+import { useApp } from '../../context/AppContext';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  
-  const [profile, setProfile] = useState({
-    name: 'Armor User',
-    email: 'alex@armor.ai',
-    country: '',
-    state: '',
-    city: '',
-    monthlySalary: '',
-    hasEmi: 'no',
-    emiAmount: '',
-    totalPropertiesValue: '',
-    mobileNumber: ''
-  });
-
+  const { profile, setProfile } = useApp();
   const [formData, setFormData] = useState({ ...profile });
 
   const handleChange = (e) => {

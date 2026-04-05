@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
 
 // Layout
 import Navbar from './components/Common/Navbar';
@@ -36,6 +37,7 @@ const DashboardLayout = () => {
 
 function App() {
   return (
+    <AppProvider>
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -60,6 +62,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
+    </AppProvider>
   );
 }
 

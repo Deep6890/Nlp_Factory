@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { User, Menu, X, Bell, LogOut } from 'lucide-react';
 import LogoutModal from './LogoutModal';
+import { useApp } from '../../context/AppContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
+  const { pendingReminders, profile } = useApp();
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard' },
@@ -53,11 +55,11 @@ const Navbar = () => {
             title="Reminders"
           >
             <Bell size={16} />
-            <span className="nav-reminder-badge">3</span>
+            {pendingReminders > 0 && <span className="nav-reminder-badge">{pendingReminders}</span>}
           </NavLink>
           <Link to="/dashboard/profile" className="nav-profile" style={{ textDecoration: 'none' }}>
             <div className="nav-avatar"><User size={14} /></div>
-            <span>Profile</span>
+            <span>{profile.name.split(' ')[0]}</span>
           </Link>
         </div>
 

@@ -1,11 +1,14 @@
 import React from 'react';
+import { useApp } from '../../context/AppContext';
 import './Layout.css';
 
-const TopBar = () => (
+const TopBar = () => {
+  const { profile } = useApp();
+  return (
   <div className="topbar">
     <div className="greeting">
        <p style={{color: '#64748b', fontSize: '12px'}}>Welcome back,</p>
-       <h3 style={{fontSize: '18px'}}>Armor</h3>
+       <h3 style={{fontSize: '18px'}}>{profile.name.split(' ')[0]}</h3>
     </div>
     <div className="user-area">
       <div className="user-pill">
@@ -14,5 +17,6 @@ const TopBar = () => (
       </div>
     </div>
   </div>
-);
+  );
+};
 export default TopBar;

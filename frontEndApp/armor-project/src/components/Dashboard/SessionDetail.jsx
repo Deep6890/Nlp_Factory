@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Globe, Activity, AlertTriangle, CheckCircle2, TrendingUp, FileText } from 'lucide-react';
 
@@ -38,6 +38,128 @@ const RISK_STYLE = {
   HIGH:{ bg:C.text,    color:'#fff',      border:C.text  },
   LOW: { bg:C.limelt,  color:C.greendk,   border:C.green },
   MED: { bg:'#fefce8', color:'#92400e',   border:'#fde68a' },
+};
+
+const EMOTION_COLORS = {
+  Stress:      { bar:'#dc2626', light:'rgba(220,38,38,0.12)',  label:'#dc2626' },
+  Confidence:  { bar:C.greendk, light:'rgba(122,170,82,0.15)', label:C.greendk },
+  Uncertainty: { bar:'#e0a020', light:'rgba(224,160,32,0.12)', label:'#e0a020' },
+};
+
+const EmotionBarChart = ({ data }) => {
+  const [animated, setAnimated] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setAnimated(true), 120);
+    return () => clearTimeout(t);
+  }, []);
+
+  const CHART_H = 150;
+  const entries = Object.entries(data);
+
+  return (
+    <div ref={ref}>
+      {/* Y-axis grid lines */}
+      <div style={{ position:'relative', height: CHART_H, display:'flex', alignItems:'flex-end', gap:3, padding:'0 4px' }}>
+
+        {/* Grid lines at 25 / 50 / 75 / 100% */}
+        {[25,50,75,100].map(pct => (
+          <div key={pct} style={{
+            position:'absolute',
+            left:0, right:0,
+            bottom: `${pct}%`,
+            height:1,
+            background:'rgba(160,200,120,0.12)',
+            pointerEvents:'none',
+            zIndex:0,
+          }}>
+            <span style={{ position:'absolute', right:'calc(100% + 4px)', top:-7, fontSize:9, fontWeight:600, color:C.textdim, whiteSpace:'nowrap' }}>{pct}</span>
+          </div>
+        ))}
+
+        {/* Bars */}
+        {entries.map(([key, val], i) => {
+          const colors = EMOTION_COLORS[key] || { bar:C.green, light:'rgba(160,200,120,0.15)', label:C.greendk };
+          const barH = animated ? (val / 100) * CHART_H : 0;
+
+          return (
+            <div key={key} style={{ flex:1, height:'100%', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'flex-end', position:'relative', zIndex:1 }}>
+
+              {/* Value label — floats above bar */}
+              <span style={{
+                position:'absolute',
+                bottom: barH + 6,
+                fontSize:11, fontWeight:800, color:colors.label,
+                opacity: animated ? 1 : 0,
+                transition:`bottom 0.8s cubic-bezier(0.22,1,0.36,1) ${i*0.12}s, opacity 0.4s ease ${i*0.12+0.4}s`,
+                whiteSpace:'nowrap',
+              }}>{val}%</span>
+
+              {/* Bar fill — thin, grows from bottom */}
+              <div style={{
+                width: 28,
+                height: barH,
+                background:`linear-gradient(180deg, ${colors.bar}bb 0%, ${colors.bar} 100%)`,
+                borderRadius:'5px 5px 3px 3px',
+                transition:`height 0.85s cubic-bezier(0.22,1,0.36,1) ${i*0.12}s`,
+                position:'relative',
+                overflow:'hidden',
+                boxShadow:`0 -3px 14px ${colors.bar}44`,
+              }}>
+                {/* Inner shimmer */}
+                <div style={{
+                  position:'absolute', top:0, left:0, right:0, height:'40%',
+                  background:'linear-gradient(180deg,rgba(255,255,255,0.30) 0%,transparent 100%)',
+                  borderRadius:'inherit',
+                  pointerEvents:'none',
+                }}/>
+              </div>
+
+              {/* Track background — thin, behind bar */}
+              <div style={{
+                position:'absolute', bottom:0,
+                width: 28,
+                height:'100%',
+                background:colors.light,
+                borderRadius:'5px 5px 3px 3px',
+                zIndex:-1,
+              }}/>
+
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Baseline */}
+      <div style={{ height:2, background:'rgba(160,200,120,0.25)', borderRadius:2, margin:'0 4px' }} />
+
+      {/* X-axis labels */}
+      <div style={{ display:'flex', gap:3, padding:'8px 4px 0', marginBottom:10 }}>
+        {entries.map(([key]) => {
+          const colors = EMOTION_COLORS[key] || { label:C.greendk };
+          return (
+            <div key={key} style={{ flex:1, textAlign:'center' }}>
+              <span style={{ fontSize:11, fontWeight:700, color:colors.label }}>{key}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Legend */}
+      <div style={{ display:'flex', gap:16, flexWrap:'wrap' }}>
+        {entries.map(([key, val]) => {
+          const colors = EMOTION_COLORS[key] || { bar:C.green, label:C.greendk };
+          return (
+            <div key={key} style={{ display:'flex', alignItems:'center', gap:5 }}>
+              <div style={{ width:8, height:8, borderRadius:'50%', background:colors.bar, boxShadow:`0 0 5px ${colors.bar}88` }} />
+              <span style={{ fontSize:11, fontWeight:600, color:C.textmid }}>{key}: <strong style={{ color:colors.label }}>{val}%</strong></span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 const SessionDetail = () => {
@@ -105,19 +227,7 @@ const SessionDetail = () => {
             <div style={ib(false)}><Activity size={15}/></div>
             <span style={{ fontSize:13, fontWeight:800 }}>Emotion Analysis</span>
           </div>
-          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
-            {Object.entries(session.emotionData).map(([key,val])=>(
-              <div key={key}>
-                <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
-                  <span style={{ fontSize:12, fontWeight:700, color:C.text }}>{key}</span>
-                  <span style={{ fontSize:12, fontWeight:800, color:C.textmid }}>{val}%</span>
-                </div>
-                <div style={{ height:7, background:C.cream2, borderRadius:4, overflow:'hidden' }}>
-                  <div style={{ width:`${val}%`, height:'100%', borderRadius:4, background:val>60?C.text:val>30?C.green:C.limelt, transition:'width 0.7s ease' }}/>
-                </div>
-              </div>
-            ))}
-          </div>
+          <EmotionBarChart data={session.emotionData} />
         </div>
 
         {/* Decision Timeline — 2 cols */}

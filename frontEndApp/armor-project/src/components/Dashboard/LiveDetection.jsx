@@ -446,31 +446,90 @@ const LiveDetection = () => {
             </div>
 
             {/* Emotions */}
-            <div style={{ ...card, flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
-                <Zap size={14} color={C.greendk} />
-                <h3 style={{ fontSize: 11, fontWeight: 700, color: C.textdim, textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                  Live Emotion Analysis
-                </h3>
+            <div style={{ ...card, alignSelf: 'flex-start', padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, marginBottom: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Zap size={13} color={C.greendk} />
+                  <h3 style={{ fontSize: 11, fontWeight: 700, color: C.textdim, textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                    Live Emotion Analysis
+                  </h3>
+                </div>
+                {status === 'recording' && (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, fontWeight: 700, color: C.greendk }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.greendk, display: 'inline-block', animation: 'livePulse 1.6s ease-out infinite' }} />
+                    LIVE
+                  </span>
+                )}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+              {/* Vertical bar chart — fixed layout, no flex stretch */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 12, height: 90, padding: '0 8px', position: 'relative' }}>
+
+                {/* Grid lines */}
+                {[25, 50, 75, 100].map(pct => (
+                  <div key={pct} style={{
+                    position: 'absolute', left: 0, right: 0,
+                    bottom: `${pct}%`, height: 1,
+                    background: 'rgba(160,200,120,0.10)',
+                    pointerEvents: 'none',
+                  }} />
+                ))}
+
                 {[
-                  { label: 'Hesitant',  val: emotions.Hesitant,  color: '#e0a020' },
-                  { label: 'Stressed',  val: emotions.Stressed,  color: '#dc2626' },
-                  { label: 'Confident', val: emotions.Confident, color: C.greendk },
-                ].map(({ label, val, color }) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 76, fontSize: 13, fontWeight: 600, color: C.text }}>{label}</div>
-                    <div style={{ flex: 1, background: C.cream2, height: 7, borderRadius: 4, overflow: 'hidden' }}>
+                  { label: 'Hesitant',  val: emotions.Hesitant,  color: '#e0a020', light: 'rgba(224,160,32,0.10)' },
+                  { label: 'Stressed',  val: emotions.Stressed,  color: '#dc2626', light: 'rgba(220,38,38,0.10)'  },
+                  { label: 'Confident', val: emotions.Confident, color: C.greendk, light: 'rgba(122,170,82,0.12)' },
+                ].map(({ label, val, color, light }) => {
+                  const CHART_H = 90;
+                  const barH = (Math.round(val) / 100) * CHART_H;
+                  return (
+                    <div key={label} style={{ width: 58, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', position: 'relative', flexShrink: 0 }}>
+
+                      {/* Value label floats above bar */}
+                      <span style={{
+                        position: 'absolute',
+                        bottom: barH + 5,
+                        fontSize: 11, fontWeight: 800, color,
+                        transition: 'bottom 0.6s cubic-bezier(0.22,1,0.36,1)',
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'none',
+                      }}>{Math.round(val)}%</span>
+
+                      {/* Bar fill */}
                       <div style={{
-                        width: `${Math.round(val)}%`, background: color,
-                        height: '100%', borderRadius: 4,
-                        transition: 'width 0.6s ease',
+                        width: 18,
+                        height: barH,
+                        background: color,
+                        borderRadius: '4px 4px 2px 2px',
+                        transition: 'height 0.6s cubic-bezier(0.22,1,0.36,1)',
+                        position: 'relative',
+                        zIndex: 2,
+                      }} />
+
+                      {/* Track */}
+                      <div style={{
+                        position: 'absolute', bottom: 0,
+                        left: '50%', transform: 'translateX(-50%)',
+                        width: 18, height: '100%',
+                        background: light, borderRadius: '4px 4px 2px 2px', zIndex: 1,
                       }} />
                     </div>
-                    <div style={{ width: 36, fontSize: 12, fontWeight: 700, color: C.textmid, textAlign: 'right' }}>
-                      {Math.round(val)}%
-                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Baseline */}
+              <div style={{ height: 1, background: 'rgba(160,200,120,0.20)', borderRadius: 2, margin: '0 8px' }} />
+
+              {/* X-axis labels */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 12, padding: '6px 8px 0' }}>
+                {[
+                  { label: 'Hesitant', color: '#e0a020' },
+                  { label: 'Stressed', color: '#dc2626' },
+                  { label: 'Confident', color: C.greendk },
+                ].map(({ label, color }) => (
+                  <div key={label} style={{ width: 58, textAlign: 'center' }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color }}>{label}</span>
                   </div>
                 ))}
               </div>

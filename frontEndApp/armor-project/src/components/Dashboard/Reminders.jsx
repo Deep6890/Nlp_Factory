@@ -1,76 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Circle, CheckCircle2, Navigation, Plus, X } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const Reminders = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [showAddForm, setShowAddForm] = useState(false);
-  
-  // Form state
   const [newTitle, setNewTitle] = useState('');
   const [newDate, setNewDate] = useState('');
+  const { reminders: remindersData, setReminders: setRemindersData, addReminder, toggleReminder } = useApp();
 
-  const [remindersData, setRemindersData] = useState([
-    {
-      id: 1,
-      title: 'Pay Home Loan EMI',
-      status: 'Pending',
-      dueDate: '2026-04-10',
-      session: 'Home Loan Discussion',
-      badgeClass: 'Due Soon',
-      badgeColor: 'text-amber-600',
-      badgeBg: 'bg-amber-50',
-      completed: false
-    },
-    {
-      id: 2,
-      title: 'Call CA about tax saving options',
-      status: 'Pending',
-      dueDate: '2026-04-01',
-      session: 'Investment Strategy',
-      badgeClass: 'Pending',
-      badgeColor: 'text-slate-600',
-      badgeBg: 'bg-slate-100',
-      completed: false
-    },
-    {
-      id: 3,
-      title: 'Review SIP portfolio performance',
-      status: 'Pending',
-      dueDate: '2026-04-15',
-      session: 'SIP Planning Call',
-      badgeClass: 'Upcoming',
-      badgeColor: 'text-slate-600',
-      badgeBg: 'bg-slate-100',
-      completed: false
-    },
-    {
-      id: 4,
-      title: 'Check car loan interest rates',
-      status: 'Done',
-      dueDate: '2026-03-20',
-      customDesc: 'Completed manually',
-      badgeClass: 'Done',
-      badgeColor: 'text-teal-600',
-      badgeBg: 'bg-teal-50',
-      completed: true
-    }
-  ]);
-
-  // Effect to automatically mark passed dates as done
+  // Auto-mark passed dates as done
   useEffect(() => {
-    const todayStr = new Date().toISOString().split('T')[0]; // simple YYYY-MM-DD
-    
+    const todayStr = new Date().toISOString().split('T')[0];
     setRemindersData(prev => prev.map(rem => {
       if (!rem.completed && rem.dueDate && rem.dueDate < todayStr) {
-        return {
-          ...rem,
-          completed: true,
-          status: 'Done',
-          badgeClass: 'Auto-Done',
-          badgeColor: 'text-teal-600',
-          badgeBg: 'bg-teal-50',
-          customDesc: 'Marked done (Date passed)'
-        };
+        return { ...rem, completed: true, status: 'Done', badgeClass: 'Auto-Done', badgeColor: 'text-teal-600', badgeBg: 'bg-teal-50', customDesc: 'Marked done (Date passed)' };
       }
       return rem;
     }));
@@ -79,42 +23,13 @@ const Reminders = () => {
   const handleAddReminder = (e) => {
     e.preventDefault();
     if (!newTitle.trim() || !newDate) return;
-
-    const newReminder = {
-      id: Date.now(),
-      title: newTitle,
-      status: 'Pending',
-      dueDate: newDate,
-      session: 'User Added',
-      badgeClass: 'New',
-      badgeColor: 'text-slate-900',
-      badgeBg: 'bg-[#c7f284]',
-      completed: false
-    };
-
-    setRemindersData([newReminder, ...remindersData]);
+    addReminder({ id: Date.now(), title: newTitle, status: 'Pending', dueDate: newDate, session: 'User Added', badgeClass: 'New', badgeColor: 'text-slate-900', badgeBg: 'bg-[#c7f284]', completed: false });
     setNewTitle('');
     setNewDate('');
     setShowAddForm(false);
   };
 
-  const toggleStatus = (id) => {
-    setRemindersData(prev => prev.map(rem => {
-      if (rem.id === id) {
-        const isCompleted = !rem.completed;
-        return {
-          ...rem,
-          completed: isCompleted,
-          status: isCompleted ? 'Done' : 'Pending',
-          badgeClass: isCompleted ? 'Done' : 'Pending',
-          badgeColor: isCompleted ? 'text-teal-600' : 'text-slate-600',
-          badgeBg: isCompleted ? 'bg-teal-50' : 'bg-slate-100',
-          customDesc: isCompleted ? 'Manually completed' : null
-        };
-      }
-      return rem;
-    }));
-  };
+  const toggleStatus = (id) => toggleReminder(id);
 
   const filteredReminders = remindersData.filter(d => {
     if (activeTab === 'All') return true;
