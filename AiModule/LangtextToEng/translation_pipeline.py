@@ -1,9 +1,9 @@
 import re
-import torch
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+import gc
+import logging
 from langdetect import detect, LangDetectException
 
-MODEL_NAME = "facebook/nllb-200-distilled-600M"
+logger = logging.getLogger(__name__)
 
 LANG_MAP = {
     "hi": "hin_Deva", "bn": "ben_Beng", "ta": "tam_Taml", "te": "tel_Telu",
@@ -14,44 +14,75 @@ LANG_MAP = {
     "mni": "mni_Beng", "sat": "sat_Olck",
 }
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-if torch.cuda.is_available():
-    translator = AutoModelForSeq2SeqLM.from_pretrained(
-        MODEL_NAME, device_map="auto", load_in_8bit=True
-    )
-else:
-    translator = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
-
-DEVICE = next(translator.parameters()).device
-ENG_TOKEN_ID = tokenizer.convert_tokens_to_ids("eng_Latn")
+ENG_LANGS = {"en", "english", "eng"}
 
 
-def _detect_lang(text: str) -> str:
+def _google_translate(text: str, src_lang: str) -> str | None:
+    """deep-translator via Google Translate — best quality, needs internet."""
     try:
-        return LANG_MAP.get(detect(re.sub(r"[\r\n\t]", " ", text)), "eng_Latn")
-    except LangDetectException:
-        return "eng_Latn"
+        from deep_translator import GoogleTranslator
+        result = GoogleTranslator(source=src_lang, target="en").translate(text[:4999])
+        return result.strip() if result else None
+    except Exception as e:
+        logger.debug("Google translate failed: %s", e)
+        return None
 
 
-def translate(text: str) -> str:
-    if not text.strip():
-        return ""
-    src_lang = _detect_lang(text)
-    if src_lang == "eng_Latn":
+def _argos_translate(text: str, src_lang: str) -> str | None:
+    """Argostranslate — offline fallback, lower quality."""
+    try:
+        import argostranslate.translate
+        installed = argostranslate.translate.get_installed_languages()
+        src_obj = next((l for l in installed if l.code == src_lang), None)
+        eng_obj = next((l for l in installed if l.code == "en"), None)
+        if src_obj and eng_obj:
+            t = src_obj.get_translation(eng_obj)
+            return t.translate(text).strip() if t else None
+    except Exception as e:
+        logger.debug("Argos translate failed: %s", e)
+    return None
+
+
+def translate(text: str, src_lang: str = None) -> str:
+    """
+    Translate Indian language text to English.
+
+    Priority:
+      1. Google Translate via deep-translator (best quality, needs internet)
+      2. Argostranslate (offline fallback)
+      3. Return original text unchanged (never crashes)
+    """
+    if not text or not text.strip():
         return text
-    tokenizer.src_lang = src_lang
-    inputs = tokenizer(text, return_tensors="pt").to(DEVICE)
-    with torch.inference_mode():
-        tokens = translator.generate(
-            **inputs,
-            forced_bos_token_id=ENG_TOKEN_ID,
-            max_length=256,
-            num_beams=4,
-            repetition_penalty=3.0,
-            no_repeat_ngram_size=4,
-        )
-    return tokenizer.batch_decode(tokens, skip_special_tokens=True)[0]
+
+    if not src_lang:
+        try:
+            src_lang = detect(re.sub(r"[\r\n\t]", " ", text))
+        except Exception:
+            src_lang = "hi"
+
+    if src_lang.lower() in ENG_LANGS:
+        return text
+
+    # Primary: Google Translate
+    result = _google_translate(text, src_lang)
+    if result:
+        logger.info("Google translation OK [%s->en]", src_lang)
+        return result
+
+    # Fallback: Argostranslate
+    result = _argos_translate(text, src_lang)
+    if result:
+        logger.info("Argostranslate OK [%s->en]", src_lang)
+        return result
+
+    logger.warning("All translation methods failed — returning original text")
+    return text
+
+
+def free_ram():
+    """No-op — lightweight translators use no persistent RAM."""
+    gc.collect()
 
 
 if __name__ == "__main__":
