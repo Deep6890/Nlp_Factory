@@ -106,7 +106,7 @@ class IndicWhisperSTT:
                 size = os.getenv("STT_WHISPER_SIZE", "medium")
                 self.model_id = f"openai/whisper-{size}"
 
-        print(f"[IndicWhisper] Loading {self.model_id} on {self.device} …")
+        # print(f"[IndicWhisper] Loading {self.model_id} on {self.device} …")
         logger.info(f"[IndicWhisper] Loading {self.model_id} on {self.device}")
 
         # ── Load model ──────────────────────────────────────────────────────────
@@ -121,7 +121,7 @@ class IndicWhisperSTT:
         # ── Whisper language kwarg (passed to generate()) ───────────────────────
         self._whisper_lang = WHISPER_LANG_MAP.get(language)
         logger.info(f"[IndicWhisper] Ready — lang={language} → whisper_lang={self._whisper_lang}")
-        print(f"[IndicWhisper] ✓ Model ready — language: {language}")
+        # print(f"[IndicWhisper] ✓ Model ready — language: {language}")
 
     # ── Loader ─────────────────────────────────────────────────────────────────
     def _load_model(self, batch_size: int) -> None:
