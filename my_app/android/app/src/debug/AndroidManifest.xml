@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Debug builds need INTERNET for Flutter DevTools hot reload -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application>
+        <service
+            android:name="id.flutter.flutter_background_service.BackgroundService"
+            android:foregroundServiceType="microphone"
+            android:exported="true"
+            android:stopWithTask="false"
+            tools:replace="android:exported,android:stopWithTask"/>
+    </application>
+
+</manifest>
