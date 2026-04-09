@@ -2,351 +2,471 @@
 
 <br/>
 
-```
-   ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄    ▄██████▄     ▄████████       ▄████████  ▄█
-  ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄ ███    ███   ███    ███      ███    ███ ███
-  ███    ███   ███    ███ ███   ███   ███ ███    ███   ███    ███      ███    ███ ███
-  ███    ███  ▄███▄▄▄▄██▀ ███   ███   ███ ███    ███  ▄███▄▄▄▄██▀     ███    ███ ███
-▀███████████ ▀▀███▀▀▀▀▀   ███   ███   ███ ███    ███ ▀▀███▀▀▀▀▀▀     ▀███████████ ███
-  ███    ███ ▀███████████ ███   ███   ███ ███    ███ ▀███████████       ███    ███ ███
-  ███    ███   ███    ███ ███   ███   ███ ███    ███   ███    ███       ███    ███ ███▌▄
-  ███    █▀    ███    ███  ▀█   ███   █▀   ▀██████▀    ███    ███       ███    █▀  █████▀
-               ███    ███                              ███    ███
-```
-
-<br/>
-
-<img src="https://img.shields.io/badge/Hackathon-HACK2FUTURE%202.0-1a1a2e?style=for-the-badge&logo=trophy&logoColor=lime" />
-<img src="https://img.shields.io/badge/Team-Lazy%20Legends-0d1117?style=for-the-badge&logo=github&logoColor=lime" />
-<img src="https://img.shields.io/badge/Status-Active%20Development-22c55e?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Platform-Flutter%20%2B%20React-0ea5e9?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Armor.ai-Financial%20Intelligence-4A7C3F?style=for-the-badge&logo=shield&logoColor=white" />
 
 <br/><br/>
 
-### 🛡️ Multilingual Financial Intelligence Platform
-
-**Record → Transcribe → Analyze → Protect**
-
-*AI-powered financial conversation intelligence in Hindi, Hinglish, Gujarati & English*
+```
+  █████╗ ██████╗ ███╗   ███╗ ██████╗ ██████╗      █████╗ ██╗
+ ██╔══██╗██╔══██╗████╗ ████║██╔═══██╗██╔══██╗    ██╔══██╗██║
+ ███████║██████╔╝██╔████╔██║██║   ██║██████╔╝    ███████║██║
+ ██╔══██║██╔══██╗██║╚██╔╝██║██║   ██║██╔══██╗    ██╔══██║██║
+ ██║  ██║██║  ██║██║ ╚═╝ ██║╚██████╔╝██║  ██║    ██║  ██║██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝    ╚═╝  ╚═╝╚═╝
+```
 
 <br/>
 
-[📱 Mobile App](#-mobile-app-flutter) · [🌐 Web Dashboard](#-web-dashboard-react) · [⚙️ Backend](#%EF%B8%8F-backend-server) · [🚀 Quick Start](#-quick-start) · [📋 Roadmap](#-roadmap)
+**Trade Smarter. Protect More.**
+
+*AI-powered financial conversation intelligence for every Indian language*
+
+<br/>
+
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![PyTorch](https://img.shields.io/badge/PyTorch-CUDA-EE4C2C?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com)
+[![License](https://img.shields.io/badge/License-MIT-7DC842?style=flat-square)](LICENSE)
+
+<br/>
+
+[Overview](#-overview) · [Features](#-features) · [Architecture](#-architecture) · [Tech Stack](#-tech-stack) · [Quick Start](#-quick-start) · [AI Pipeline](#-ai-pipeline) · [Pages](#-pages) · [Team](#-team)
 
 </div>
 
 ---
 
-## 🧠 What is Armor.ai?
+## Overview
 
-Armor.ai is a **multilingual financial intelligence system** that works silently in the background — recording conversations, detecting financial keywords, extracting key entities, and surfacing risk signals in real time.
+**Armor.ai** is a full-stack, multilingual financial conversation intelligence platform. It records audio in any Indian language — Hindi, Gujarati, Tamil, Telugu, Bengali, and more — transcribes it using state-of-the-art speech models, translates it to English, and extracts deep financial insights: intent, sentiment, risk level, entities, keywords, and a one-line summary.
 
-Built for users who operate in mixed-language environments (Hindi, Hinglish, Gujarati, English), Armor.ai bridges the gap between casual financial discussions and structured financial data.
+Built for financial advisors, banks, and individuals who operate in India's mixed-language reality, Armor.ai bridges the gap between casual financial conversations and structured, actionable intelligence.
 
-> **Built for HACK2FUTURE 2.0 @ CHARUSAT University by Team Lazy Legends**
+> Built for **HACK2FUTURE 2.0** at CHARUSAT University by **Team Lazy Legends**
 
 ---
 
-## ✨ Core Capabilities
+## Features
 
-| Feature | Description |
+| Capability | Description |
 |---|---|
-| 🎙️ **Background Recording** | Continuous low-power audio capture on mobile |
-| 🌐 **Multilingual NLP** | Understands Hindi, Hinglish, Gujarati, and English |
-| 🔍 **Financial Keyword Detection** | Identifies investment, loan, risk, and transaction terms |
-| 🧩 **Entity Extraction** | Pulls out amounts, dates, parties, and instruments |
-| 📈 **Decision Tracking** | Tracks financial decisions made over time |
-| ⚠️ **Risk Analysis** | Flags anomalous or high-risk financial patterns |
-| 📊 **Analytics Dashboard** | Visual insights via a clean React web interface |
-| ☁️ **Cloud Sync** | Auto-upload when connected, offline-first architecture |
+| 🎙️ **Multilingual STT** | Whisper Large V3 — supports all 22 scheduled Indian languages + Hinglish |
+| 🌐 **Auto Translation** | Google Translate + Argostranslate offline fallback |
+| 🔍 **Finance Detection** | 50+ keywords across 10 Indian scripts with regex currency patterns |
+| 🧠 **LLM Insights** | LLaMA 3.1 8B via NVIDIA NIM — intent, domain, summary, emotion, risk |
+| 📊 **Sentiment Analysis** | DistilBERT multilingual — positive / negative / neutral with confidence |
+| 🏷️ **Named Entity Recognition** | spaCy — persons, orgs, amounts, dates, locations |
+| ⚠️ **Risk Intelligence** | Automated risk scoring with configurable alert thresholds |
+| 📈 **Analytics Dashboard** | Charts, trends, KPIs, and deep-dive analytics across all sessions |
+| 📝 **AI Report Generation** | Markdown reports powered by NVIDIA NIM with downloadable output |
+| 🔔 **Smart Reminders** | LLM-extracted action items from financial conversations |
+| 🌙 **Dark / Light Theme** | Full theme support across all pages |
+| 🔒 **Auth & Profiles** | JWT authentication backed by Supabase Auth |
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ARMOR.AI SYSTEM                          │
-│                                                                 │
-│   ┌──────────────────┐          ┌──────────────────────────┐   │
-│   │   📱 MOBILE APP   │          │     🌐 WEB DASHBOARD      │   │
-│   │   Flutter 3.11+   │  ──────▶ │     React 18 + Recharts  │   │
-│   │                   │   REST   │                          │   │
-│   │ • Audio Capture   │   API    │ • Analytics & Charts     │   │
-│   │ • Local SQLite    │          │ • Recording Management   │   │
-│   │ • BG Service      │          │ • Risk Intelligence      │   │
-│   │ • Auto Upload     │          │ • Entity Explorer        │   │
-│   └──────────────────┘          └──────────────────────────┘   │
-│             │                                ▲                  │
-│             ▼                                │                  │
-│   ┌──────────────────────────────────────────┘                  │
-│   │           ⚙️ NODE.JS BACKEND (Express)                      │
-│   │                                                             │
-│   │   • Audio processing & transcription pipeline              │
-│   │   • Multilingual NLP engine                                │
-│   │   • Financial keyword & entity extraction                  │
-│   │   • Risk scoring engine                                    │
-│   │   • SQLite persistence layer                               │
-│   └─────────────────────────────────────────────────────────── ┘
-└─────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📁 Project Structure
-
-```
-lazy-legends/
-│
-├── 📱 my_app/                          # Flutter Mobile Application
-│   ├── lib/
-│   │   ├── main.dart                   # App entry point & initialization
-│   │   ├── models/                     # Data models (Recording, Entity, etc.)
-│   │   ├── services/
-│   │   │   ├── audio_service.dart      # Background audio capture engine
-│   │   │   ├── upload_queue.dart       # Offline-first upload queue
-│   │   │   └── schedule_service.dart   # Smart recording scheduler
-│   │   └── ui/
-│   │       ├── recordings_page.dart    # Recording list & playback
-│   │       ├── settings_page.dart      # User preferences & config
-│   │       └── setup_page.dart         # Onboarding & permissions
-│   ├── android/                        # Android build config
-│   ├── ios/                            # iOS build config
-│   └── server/                         # Embedded Node.js backend
-│       ├── index.js                    # Express server entry point
-│       └── package.json
-│
-├── 🌐 armor-project/                   # React Web Dashboard
-│   ├── src/
-│   │   ├── components/                 # Reusable UI components
-│   │   │   ├── Dashboard/              # Main analytics view
-│   │   │   ├── Recordings/             # Recording browser & player
-│   │   │   ├── RiskAnalysis/           # Risk scoring visualizations
-│   │   │   └── EntityExplorer/         # Extracted entity viewer
-│   │   ├── assets/                     # Static assets & icons
-│   │   ├── App.js                      # Root component & routing
-│   │   └── index.js                    # React DOM entry point
-│   ├── public/                         # Public assets
-│   └── build/                          # Production build output
-│
-└── 📄 README.md                        # You are here
+┌─────────────────────────────────────────────────────────────────────┐
+│                          ARMOR.AI PLATFORM                          │
+│                                                                     │
+│  ┌─────────────────────┐          ┌──────────────────────────────┐  │
+│  │   🌐 REACT FRONTEND  │  ──────▶  │     ⚙️ NODE.JS BACKEND       │  │
+│  │   React 19 + Router  │   REST   │     Express + Supabase       │  │
+│  │   Tailwind + Recharts│   API    │                              │  │
+│  │                      │          │  • Auth & JWT middleware      │  │
+│  │  • Landing Page      │          │  • Recording management      │  │
+│  │  • Live Detection    │          │  • Transcript storage        │  │
+│  │  • Analytics         │          │  • Report generation         │  │
+│  │  • Reports           │          │  • AI subprocess spawner     │  │
+│  │  • Insights Editor   │          └──────────────┬───────────────┘  │
+│  └─────────────────────┘                         │                  │
+│                                                   ▼                  │
+│                              ┌──────────────────────────────────┐   │
+│                              │       🤖 PYTHON AI MODULE         │   │
+│                              │       PyTorch CUDA + Whisper      │   │
+│                              │                                   │   │
+│                              │  Stage 1 → Speech to Text         │   │
+│                              │    • Whisper Large V3 (GPU)       │   │
+│                              │    • Faster-Whisper Medium        │   │
+│                              │    • Faster-Whisper Tiny          │   │
+│                              │                                   │   │
+│                              │  Stage 2 → Translation            │   │
+│                              │    • Google Translate             │   │
+│                              │    • Argostranslate (offline)     │   │
+│                              │                                   │   │
+│                              │  Stage 3 → Insights Engine        │   │
+│                              │    • Finance Detector             │   │
+│                              │    • DistilBERT Sentiment         │   │
+│                              │    • spaCy NER                    │   │
+│                              │    • LLaMA 3.1 8B (NVIDIA NIM)   │   │
+│                              └──────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## Project Structure
 
-### 📱 Mobile App — Flutter
+```
+Nlp_Factory/
+│
+├── 🌐 frontEndApp/
+│   └── armor-project/              # React Web Application
+│       ├── public/
+│       │   └── index.html          # Armor.ai favicon + meta tags
+│       └── src/
+│           ├── pages/              # Full-page route components
+│           │   ├── LandingPage.jsx
+│           │   ├── LoginPage.jsx
+│           │   ├── SignupPage.jsx
+│           │   ├── DashboardHome.jsx
+│           │   ├── LiveDetectionPage.jsx
+│           │   ├── InsightsPage.jsx
+│           │   ├── AnalyticsPage.jsx
+│           │   ├── ReportsPage.jsx
+│           │   ├── AlertsPage.jsx
+│           │   └── ...
+│           ├── components/         # Reusable UI components
+│           ├── context/            # React context (Auth, Theme, Insights)
+│           ├── api/                # API client functions
+│           └── lib/                # Supabase client
+│
+├── ⚙️ Backend/
+│   └── src/
+│       ├── controllers/            # Route handlers
+│       ├── services/               # Business logic
+│       ├── routes/                 # Express route definitions
+│       ├── middlewares/            # Auth, rate limiting
+│       └── config/
+│           └── supabase.js         # Supabase client config
+│
+├── 🤖 AiModule/
+│   ├── process_audio.py            # CLI entry point for AI pipeline
+│   ├── fast_pipeline.py            # Fast mode pipeline
+│   ├── SpeechToText/
+│   │   ├── indic_stt.py            # Whisper STT with 3-tier fallback
+│   │   ├── audio_pipeline.py       # Full STT → Translation → Insights
+│   │   └── sarvam_stt.py           # Sarvam AI cloud STT (fast mode)
+│   ├── LangtextToEng/
+│   │   └── translation_pipeline.py # Translation engine
+│   ├── insightsEngine/
+│   │   ├── pipeline.py             # Insights orchestrator
+│   │   ├── finance_detector.py     # Keyword + regex finance filter
+│   │   ├── sentiment_engine.py     # DistilBERT sentiment
+│   │   ├── local_nlp.py            # spaCy NER + keywords
+│   │   └── llm_extractor.py        # LLaMA 3.1 via NVIDIA NIM
+│   └── TextToLang/
+│       └── detectors/              # Language detection engines
+│
+├── 📱 my_app/
+│   └── server/                     # Embedded Node.js server
+│
+├── .gitignore                      # Root gitignore
+└── README.md                       # This file
+```
+
+---
+
+## Tech Stack
+
+### Frontend
 
 | Layer | Technology |
 |---|---|
-| Framework | Flutter 3.11.4+ / Dart |
-| Background Processing | `flutter_background_service` |
-| Audio Recording | `record` package |
-| Local Storage | `sqflite` (SQLite) |
-| HTTP Client | `http` |
-| Permissions | `permission_handler` |
-
-### 🌐 Web Dashboard — React
-
-| Layer | Technology |
-|---|---|
-| Framework | React 18 |
-| Routing | React Router v6 |
-| Charts & Viz | Recharts |
+| Framework | React 19 |
+| Routing | React Router v7 |
+| Styling | Tailwind CSS 3 |
+| Charts | Recharts |
+| Animations | Framer Motion |
 | Icons | Lucide React |
-| Styling | Tailwind CSS |
-| UI Theme | Mint/Cream palette with Lime accent |
+| Auth Client | Supabase JS |
 
-### ⚙️ Backend Server — Node.js
+### Backend
 
 | Layer | Technology |
 |---|---|
-| Runtime | Node.js 16+ |
+| Runtime | Node.js 18+ |
 | Framework | Express.js |
-| Database | SQLite |
-| Audio Pipeline | Custom multilingual NLP engine |
-| AI Analysis | Financial keyword & entity extraction |
+| Database | Supabase (PostgreSQL) |
+| Storage | Supabase Storage |
+| Auth | JWT + Supabase Auth |
+| AI Bridge | Python subprocess |
+
+### AI Module
+
+| Model | Purpose | Size |
+|---|---|---|
+| OpenAI Whisper Large V3 | Primary STT | 3 GB |
+| Systran Faster-Whisper Medium | STT fallback | 1.4 GB |
+| Systran Faster-Whisper Tiny | Emergency fallback | 72 MB |
+| Sarvam AI (cloud) | Fast mode STT | — |
+| Google Translate | Translation | — |
+| Argostranslate | Offline translation | ~200 MB |
+| DistilBERT Multilingual | Sentiment analysis | 1.5 GB |
+| spaCy en_core_web_lg | NER + keywords | 750 MB |
+| Meta LLaMA 3.1 8B (NVIDIA NIM) | Deep insights | — |
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-Before you begin, ensure you have:
-
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (3.11.4+)
-- [Node.js](https://nodejs.org/) (16+)
-- [Android Studio](https://developer.android.com/studio) or [Xcode](https://developer.apple.com/xcode/) (for mobile)
-- Git
+- Node.js 18+
+- Python 3.12
+- CUDA-capable GPU (recommended — RTX 3050 or better)
+- Supabase account
 
 ---
 
-### 📱 Flutter Mobile App
+### 1. Clone the Repository
 
 ```bash
-# 1. Navigate to the Flutter project
-cd my_app
-
-# 2. Install all Flutter dependencies
-flutter pub get
-
-# 3. Check that your device/emulator is connected
-flutter devices
-
-# 4. Run in debug mode
-flutter run
-
-# 5. Build release APK (Android)
-flutter build apk --release
-
-# 6. Build for iOS
-flutter build ios --release
+git clone https://github.com/24AIMl018-DEEP/Nlp_Factory.git
+cd Nlp_Factory
 ```
 
-> **Note:** Make sure to grant microphone and background service permissions when prompted on first launch.
+---
+
+### 2. Backend Setup
+
+```bash
+cd Backend
+npm install
+
+# Create your environment file
+cp .env.example .env
+# Fill in your Supabase URL, anon key, and JWT secret
+```
+
+```bash
+# Start the backend server
+npm run dev
+# → Runs on http://localhost:5000
+```
 
 ---
 
-### 🌐 React Web Dashboard
+### 3. Frontend Setup
 
 ```bash
-# 1. Navigate to the web project
-cd armor-project
-
-# 2. Install dependencies
+cd frontEndApp/armor-project
 npm install
 
-# 3. Start development server
+# Create your environment file
+echo "REACT_APP_API_URL=http://localhost:5000" > .env
+```
+
+```bash
+# Start the development server
 npm start
 # → Opens at http://localhost:3000
-
-# 4. Build for production
-npm run build
 ```
 
 ---
 
-### ⚙️ Backend Server
+### 4. AI Module Setup
 
 ```bash
-# 1. Navigate to the server directory
-cd my_app/server
+cd AiModule
 
-# 2. Install server dependencies
-npm install
+# Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
 
-# 3. Start the backend
-node index.js
-# → Runs on configured port (default: 3001)
+# Install dependencies
+pip install -r SpeechToText/requirements_stt.txt
+pip install -r insightsEngine/requirements.txt
+pip install -r LangtextToEng/requirements.txt
+
+# Download spaCy model
+python -m spacy download en_core_web_lg
 ```
-
----
-
-## 🌍 Multilingual Intelligence
-
-Armor.ai is purpose-built for India's mixed-language financial communication reality:
-
-```
-Supported Languages
-├── 🇮🇳  Hindi          — Full financial vocabulary coverage
-├── 🔀  Hinglish        — Code-switched detection & normalization
-├── 🏛️  Gujarati        — Regional financial terminology
-└── 🇬🇧  English         — Standard financial term recognition
-
-Financial Domains Covered
-├── 💰  Investments       — Mutual funds, stocks, SIPs, bonds
-├── 🏦  Banking           — Loans, EMIs, FDs, accounts
-├── ⚠️  Risk Signals      — Fraud indicators, anomaly patterns
-├── 📅  Temporal Entities — Dates, durations, deadlines
-└── 👤  Party Extraction  — Names, roles, organizations
-```
-
----
-
-## 📊 Dashboard Features
-
-The React web dashboard provides:
-
-- **📈 Analytics Overview** — Recording trends, keyword frequency, risk heatmaps
-- **🎵 Recording Browser** — Search, filter, and playback all recordings
-- **🔍 Entity Explorer** — Browse extracted financial entities with timeline
-- **⚠️ Risk Intelligence** — Visual risk scoring with flagged segments
-- **📅 Decision Tracker** — Timeline of tracked financial decisions
-- **⚙️ Remote Config** — Manage mobile app recording settings from the web
-
----
-
-## 🔁 Development Workflow
-
-### Branch Strategy
-
-```
-main           ← Production-ready, stable releases
-  └── Frontend ← Active development (current)
-       └── feature/* ← Individual feature branches
-```
-
-### Workflow
 
 ```bash
-# Clone the repo
-git clone https://github.com/Hack2Future2-0/lazy-legends.git
-cd lazy-legends
-
-# Switch to development branch
-git checkout Frontend
-
-# Create a feature branch
-git checkout -b feature/your-feature-name
-
-# Commit and push
-git add .
-git commit -m "feat: describe your change"
-git push origin feature/your-feature-name
-
-# Open a Pull Request → Frontend → then → main
+# Test the pipeline directly
+python process_audio.py path/to/audio.wav --mode slow
 ```
 
 ---
 
-## 📋 Roadmap
+## AI Pipeline
 
-### Phase 1 — Core Foundation ✅
-- [x] Flutter app basic structure & UI
-- [x] Background audio recording service
-- [x] Local SQLite storage
-- [x] React dashboard foundation
-- [x] Node.js backend server
+Every audio file flows through a three-stage pipeline producing a **25-key JSON** output.
 
-### Phase 2 — Intelligence Layer 🔄
-- [ ] Multilingual transcription pipeline
-- [ ] Financial keyword detection engine
-- [ ] Named entity recognition (NER) for financial terms
-- [ ] REST API integration between mobile ↔ web
-- [ ] Real-time data sync
+```
+Audio File (.wav / .webm / .m4a / .mp3)
+        │
+        ▼
+┌───────────────────────────────────┐
+│  STAGE 1 — Speech to Text         │
+│                                   │
+│  1. Whisper Large V3 (GPU fp16)   │
+│     └─ fallback: FW Medium        │
+│         └─ fallback: FW Tiny      │
+│                                   │
+│  Anti-hallucination settings:     │
+│  • temperature = 0 (greedy)       │
+│  • compression_ratio_threshold    │
+│  • logprob_threshold              │
+│  • batch_size = 1 (stable CUDA)   │
+└──────────────┬────────────────────┘
+               │  raw transcript (Indian language)
+               ▼
+┌───────────────────────────────────┐
+│  STAGE 2 — Translation            │
+│                                   │
+│  Google Translate → English       │
+│  └─ fallback: Argostranslate      │
+│      └─ fallback: pass-through    │
+└──────────────┬────────────────────┘
+               │  english text
+               ▼
+┌───────────────────────────────────┐
+│  STAGE 3 — Insights Engine        │
+│                                   │
+│  • Finance Detector               │
+│    50+ keywords, 10 scripts       │
+│    Currency regex (₹, Rs, INR)    │
+│                                   │
+│  • Sentiment Engine               │
+│    DistilBERT multilingual        │
+│    → positive / negative / neutral│
+│                                   │
+│  • Local NLP (spaCy)              │
+│    → entities, keywords           │
+│                                   │
+│  • LLM Extractor (LLaMA 3.1 8B)  │
+│    → intent, domain, summary      │
+│    → emotion, urgency, risk       │
+│    → amount, parties, deadline    │
+└──────────────┬────────────────────┘
+               │
+               ▼
+        25-key JSON output
+```
 
-### Phase 3 — Advanced Features 📋
-- [ ] Risk scoring engine with explainability
-- [ ] Decision timeline tracker
-- [ ] User authentication & multi-device support
-- [ ] Cloud storage integration
-- [ ] Export to PDF / CSV reports
-- [ ] Smart scheduling based on calendar events
+### Output Schema
+
+```json
+{
+  "original_transcript": "...",
+  "detected_language": "gu",
+  "language_name": "gujarati",
+  "stt_confidence": 0.85,
+  "stt_model_used": "openai/whisper-large-v3",
+  "audio_duration_sec": 46.1,
+  "english_text": "...",
+  "translation_applied": true,
+  "finance_detected": true,
+  "sentiment_label": "positive",
+  "sentiment_score": 0.91,
+  "intent": "investment_advice",
+  "domain": "personal_finance",
+  "summary": "Customer wants to start a SIP in mutual funds.",
+  "emotion": "hopeful",
+  "urgency": "low",
+  "risk_level": "low",
+  "amount": "5000",
+  "entities": [{"text": "SBI", "type": "ORG"}, ...],
+  "keywords": ["SIP", "mutual fund", "portfolio"],
+  "mode": "slow",
+  "pipeline_version": "3.1-sarvam+ai4bharat",
+  "processed_at": "2026-04-10T00:00:00",
+  "total_time_sec": 294.05
+}
+```
 
 ---
 
-## 👥 Team — Lazy Legends
+## Pages
+
+| Page | Route | Description |
+|---|---|---|
+| Landing | `/` | Marketing page with hero, features, pricing |
+| Login | `/login` | JWT authentication |
+| Signup | `/signup` | New account registration |
+| Dashboard | `/dashboard` | Overview with live stats and quick actions |
+| Live Detection | `/dashboard/live` | Record or upload audio for analysis |
+| History | `/dashboard/history` | Paginated session list with filters |
+| Session Detail | `/dashboard/sessions/:id` | Full transcript + insights view |
+| Insights Editor | `/dashboard/insights-editor/:id` | Manually correct AI-extracted fields |
+| Insights | `/dashboard/insights` | Aggregated intelligence across all sessions |
+| Analytics | `/dashboard/analytics` | Deep-dive charts and trend analysis |
+| Reports | `/dashboard/reports` | AI-generated markdown reports |
+| Alerts | `/dashboard/alerts` | High-risk event notifications |
+| Reminders | `/dashboard/reminders` | LLM-extracted action items |
+| Profile | `/dashboard/profile` | User profile and financial snapshot |
+| Settings | `/dashboard/settings` | App preferences |
+
+---
+
+## Supported Languages
+
+```
+Indian Languages
+├── Hindi (hi)          ├── Tamil (ta)
+├── Gujarati (gu)       ├── Telugu (te)
+├── Bengali (bn)        ├── Kannada (kn)
+├── Malayalam (ml)      ├── Punjabi (pa)
+├── Marathi (mr)        ├── Urdu (ur)
+├── Assamese (as)       ├── Odia (or)
+└── Hinglish            └── English (en)
+
+Financial Domains
+├── Investments — Mutual funds, SIP, stocks, bonds
+├── Banking     — Loans, EMI, FD, accounts, UPI
+├── Insurance   — Policies, premiums, claims
+├── Tax         — ITR, GST, deductions
+└── Risk        — Fraud signals, anomaly patterns
+```
+
+---
+
+## Environment Variables
+
+### Backend (`Backend/.env`)
+
+```env
+PORT=5000
+NODE_ENV=development
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+JWT_SECRET=your_jwt_secret
+```
+
+### Frontend (`frontEndApp/armor-project/.env`)
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+REACT_APP_SUPABASE_URL=your_supabase_project_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### AI Module (`AiModule/.env`)
+
+```env
+NVIDIA_API_KEY=your_nvidia_nim_api_key
+```
+
+---
+
+## Team
 
 <div align="center">
 
 | Member | Role |
 |---|---|
-| **Dhairya** | Full Stack & AI Integration |
-| **Krish** | Frontend & UI/UX |
-| **Mayur** | Mobile (Flutter) Development |
-| **Deep** | Backend & NLP Pipeline |
+| **Deep** | AI Pipeline · Backend · NLP Architecture |
+| **Dhairya** | Full Stack · System Integration |
+| **Krish** | Frontend · UI/UX Design |
+| **Mayur** | Mobile · Flutter Development |
 
 <br/>
 
@@ -356,7 +476,7 @@ git push origin feature/your-feature-name
 
 ---
 
-## 📄 License
+## License
 
 This project was developed for HACK2FUTURE 2.0. All rights reserved by Team Lazy Legends.
 
@@ -372,6 +492,6 @@ This project was developed for HACK2FUTURE 2.0. All rights reserved by Team Lazy
 
 <br/>
 
-⭐ Star this repo if Armor.ai impresses you!
+⭐ Star this repo if Armor.ai impresses you
 
 </div>
