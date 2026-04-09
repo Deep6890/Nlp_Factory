@@ -45,6 +45,16 @@ export const getInsightsSummary = () =>
 export const deleteRecording = (recordingId) =>
   apiFetch(`/recordings/${recordingId}`, 'DELETE');
 
+export const retryRecording = (recordingId) =>
+  apiFetch(`/recordings/${recordingId}/retry`, 'POST');
+
+/**
+ * GET /transcripts/fast-limit
+ * Check daily fast pipeline usage status.
+ */
+export const getFastLimitStatus = () =>
+  apiFetch('/transcripts/fast-limit');
+
 /**
  * POST /recordings/upload  (multipart/form-data)
  *
@@ -59,6 +69,7 @@ export const uploadRecording = (audioFile, meta = {}) => {
   const form = new FormData();
   form.append('audio', audioFile);
   if (meta.mode)        form.append('mode',        meta.mode);
+  if (meta.language)    form.append('language',    meta.language);   // e.g. 'gu','hi','ta'
   if (meta.durationSec) form.append('durationSec', String(meta.durationSec));
   if (meta.recordedAt)  form.append('recordedAt',  meta.recordedAt);
   return apiUpload('/recordings/upload', form);

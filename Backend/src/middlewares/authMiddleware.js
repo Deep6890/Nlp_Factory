@@ -1,52 +1,84 @@
-const jwt      = require('jsonwebtoken');
-const User     = require('../models/User');
+const supabase = require('../config/supabase');
 const ApiError = require('../utils/ApiError');
+const jwt      = require('jsonwebtoken');
 
 /**
- * Protect routes: verifies Bearer JWT and attaches `req.user` (Mongoose user).
- * Populates req.user with { _id, name, email, role }.
+ * Protect routes.
+ * Accepts two token types:
+ *   1. Supabase-issued JWT  → verified via supabase.auth.getUser()
+ *   2. Backend-minted JWT   → verified via jsonwebtoken (iss: 'armor-backend')
  */
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader?.startsWith('Bearer ')) {
       throw ApiError.unauthorized('No token provided');
     }
 
-    const token   = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const token = authHeader.split(' ')[1];
 
-    const user = await User.findById(decoded.sub).lean();
-    if (!user) throw ApiError.unauthorized('User no longer exists');
+    // ── Try backend-minted JWT first (fast, no network) ──────────────────────
+    const secret = process.env.JWT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY;
+    try {
+      const decoded = jwt.verify(token, secret);
+      if (decoded.iss === 'armor-backend') {
+        // Ensure profile row exists for backend-registered users too
+        await supabase.from('users').upsert({
+          id:    decoded.sub,
+          name:  decoded.name  || decoded.email?.split('@')[0] || 'User',
+          email: decoded.email || '',
+          role:  decoded.role  || 'user',
+        }, { onConflict: 'id', ignoreDuplicates: true });
 
-    // Attach safe user shape – no password
-    req.user = {
-      _id:   user._id.toString(),
-      name:  user.name,
+        req.user = {
+          _id:   decoded.sub,
+          name:  decoded.name  || '',
+          email: decoded.email || '',
+          role:  decoded.role  || 'user',
+        };
+        return next();
+      }
+    } catch (_) {
+      // Not our token — fall through to Supabase verification
+    }
+
+    // ── Try Supabase JWT ──────────────────────────────────────────────────────
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      console.error('[auth] supabase.getUser failed:', error?.message);
+      throw ApiError.unauthorized('Invalid or expired token');
+    }
+
+    // Ensure users profile row exists (upsert on every request — cheap no-op if already there)
+    await supabase.from('users').upsert({
+      id:    user.id,
+      name:  user.user_metadata?.name || user.email?.split('@')[0] || 'User',
       email: user.email,
-      role:  user.role,
+      role:  'user',
+    }, { onConflict: 'id', ignoreDuplicates: true });
+
+    const { data: profile } = await supabase
+      .from('users')
+      .select('id, name, email, role')
+      .eq('id', user.id)
+      .single();
+
+    req.user = {
+      _id:   user.id,
+      name:  profile?.name  || user.user_metadata?.name || '',
+      email: profile?.email || user.email,
+      role:  profile?.role  || 'user',
     };
 
     next();
   } catch (err) {
-    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
-      return next(ApiError.unauthorized('Invalid or expired token'));
-    }
-    next(err);
+    next(err.statusCode ? err : ApiError.unauthorized('Invalid or expired token'));
   }
 };
 
-/**
- * Restrict access to specific roles.
- * Must be used AFTER protect middleware.
- *
- * Usage: router.delete('/...', protect, restrictTo('admin'), handler)
- *
- * @param {...string} roles
- */
 const restrictTo = (...roles) => (req, res, next) => {
   if (!roles.includes(req.user.role)) {
-    return next(ApiError.forbidden('You do not have permission to perform this action'));
+    return next(ApiError.forbidden('You do not have permission'));
   }
   next();
 };

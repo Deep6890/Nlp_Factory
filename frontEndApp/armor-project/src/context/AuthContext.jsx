@@ -1,70 +1,73 @@
-/**
- * src/context/AuthContext.jsx
- * ─────────────────────────────────────────────────────────────────────────────
- * Provides auth state (user, token, loading) and actions (login, logout)
- * to the entire app tree.
- *
- * On mount it attempts to restore the session by calling GET /auth/me with the
- * locally-stored token.  If the token is missing or invalid the user is treated
- * as unauthenticated — no redirect happens here (that's ProtectedRoute's job).
- */
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { getMe } from '../api/auth';
+import supabase from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser]       = useState(null);
   const [token, setToken]     = useState(() => localStorage.getItem('armor_token'));
-  const [loading, setLoading] = useState(true); // true until session check completes
+  const [loading, setLoading] = useState(true);
 
-  // ── Restore session on app load ───────────────────────────────────────────
   useEffect(() => {
-    const restore = async () => {
-      const storedToken = localStorage.getItem('armor_token');
-      if (!storedToken) {
-        setLoading(false);
-        return;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        const u = _mapUser(session.user);
+        setUser(u);
+        setToken(session.access_token);
+        localStorage.setItem('armor_token', session.access_token);
+        localStorage.setItem('armor_user', JSON.stringify(u));
+      } else {
+        const storedUser = localStorage.getItem('armor_user');
+        if (storedUser) {
+          try { setUser(JSON.parse(storedUser)); } catch (_) {}
+        }
       }
-      try {
-        const data = await getMe();           // GET /auth/me
-        setUser(data.user ?? data);
-        setToken(storedToken);
-      } catch {
-        // Token invalid or expired — clear silently
-        localStorage.removeItem('armor_token');
-        localStorage.removeItem('armor_user');
-        setToken(null);
-        setUser(null);
-      } finally {
-        setLoading(false);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        const u = _mapUser(session.user);
+        setUser(u);
+        setToken(session.access_token);
+        localStorage.setItem('armor_token', session.access_token);
+        localStorage.setItem('armor_user', JSON.stringify(u));
       }
-    };
-    restore();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // ── login ────────────────────────────────────────────────────────────────
-  const login = useCallback((userData, jwtToken) => {
-    localStorage.setItem('armor_token', jwtToken);
+  const login = useCallback((userData, accessToken) => {
+    localStorage.setItem('armor_token', accessToken);
     localStorage.setItem('armor_user', JSON.stringify(userData));
-    setToken(jwtToken);
+    setToken(accessToken);
     setUser(userData);
   }, []);
 
-  // ── logout ───────────────────────────────────────────────────────────────
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut().catch(() => {});
     localStorage.removeItem('armor_token');
     localStorage.removeItem('armor_user');
     setToken(null);
     setUser(null);
   }, []);
 
-  const value = { user, token, loading, login, logout };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-/** Convenience hook — use anywhere inside AuthProvider */
+const _mapUser = (u) => ({
+  id:    u.id,
+  _id:   u.id,
+  name:  u.user_metadata?.name || u.email?.split('@')[0] || 'User',
+  email: u.email,
+  role:  u.user_metadata?.role || 'user',
+});
+
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');

@@ -13,6 +13,9 @@ router.get('/search', transcriptController.searchTranscripts);
 // GET /api/v1/transcripts/insights-summary
 router.get('/insights-summary', transcriptController.getInsightsSummary);
 
+// GET /api/v1/transcripts/fast-limit  — check daily fast pipeline usage
+router.get('/fast-limit', transcriptController.getFastLimitStatus);
+
 // GET /api/v1/transcripts
 router.get('/', transcriptController.listTranscripts);
 
@@ -21,5 +24,8 @@ router.get('/:id', transcriptController.getTranscript);
 
 // DELETE /api/v1/transcripts/:id
 router.delete('/:id', transcriptController.deleteTranscript);
+
+// PATCH /api/v1/transcripts/:id/insights  — user edits the insights JSON
+router.patch('/:id/insights', transcriptController.updateInsights);
 
 module.exports = router;

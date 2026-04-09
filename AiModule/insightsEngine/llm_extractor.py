@@ -18,8 +18,9 @@ import os
 import re
 from pathlib import Path
 from dotenv import load_dotenv
-
-load_dotenv(Path(__file__).parent / ".env")
+# Load root .env (two levels up from insightsEngine/)
+load_dotenv(Path(__file__).parent.parent.parent / ".env", override=False)
+load_dotenv(Path(__file__).parent / ".env", override=False)  # fallback
 
 logger = logging.getLogger(__name__)
 

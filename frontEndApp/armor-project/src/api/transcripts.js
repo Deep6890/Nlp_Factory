@@ -17,3 +17,19 @@ export const getTranscript = (id) => apiFetch(`/transcripts/${id}`);
 
 /** DELETE /transcripts/:id */
 export const deleteTranscript = (id) => apiFetch(`/transcripts/${id}`, 'DELETE');
+
+/**
+ * PATCH /transcripts/:id/insights
+ * Update the insights JSON for a transcript (interactive editor).
+ * @param {string} id
+ * @param {object} insights
+ */
+export const updateInsights = (id, insights) =>
+  apiFetch(`/transcripts/${id}/insights`, 'PATCH', { insights });
+
+/**
+ * POST /reports/generate
+ * Generate a PDF/markdown report for the last N days
+ */
+export const generateReport = (days = 10) =>
+  apiFetch('/reports/generate', 'POST', { days });

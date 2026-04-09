@@ -1,8 +1,8 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
-const express   = require('express');
-const helmet    = require('helmet');
-const cors      = require('cors');
+const express = require('express');
+const helmet  = require('helmet');
+const cors    = require('cors');
 
 const { httpLogger }      = require('./utils/logger');
 const { apiRateLimiter }  = require('./middlewares/rateLimiter');
@@ -13,6 +13,7 @@ const authRoutes       = require('./routes/authRoutes');
 const recordingRoutes  = require('./routes/recordingRoutes');
 const transcriptRoutes = require('./routes/transcriptRoutes');
 const userRoutes       = require('./routes/userRoutes');
+const reportRoutes     = require('./routes/reportRoutes');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use(`${API}/auth`,        authRoutes);
 app.use(`${API}/recordings`,  recordingRoutes);
 app.use(`${API}/transcripts`, transcriptRoutes);
 app.use(`${API}/users`,       userRoutes);
+app.use(`${API}/reports`,     reportRoutes);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((req, res) => {

@@ -79,27 +79,14 @@ const RecordingSchema = new mongoose.Schema(
       default: 'pending',
       index:   true,
     },
-    transcript: {
-      type:    String,
-      default: null,
-    },
-    transcriptLang: {
-      type:    String,
-      default: 'hi',
-    },
-    transcriptModel: {
-      type:    String,
-      enum:    ['indicwhisper', 'indicwav2vec', 'indicconformer'],
-      default: 'indicwhisper',
-    },
-    transcriptError: {
-      type:    String,
-      default: null,
-    },
-    transcriptedAt: {
-      type:    Date,
-      default: null,
-    },
+    transcript: { type: String, default: null },
+    transcriptLang:  { type: String, default: 'hi' },
+    transcriptModel: { type: String, enum: ['indicwhisper','indicwav2vec','indicconformer'], default: 'indicwhisper' },
+    transcriptError: { type: String, default: null },
+    transcriptedAt:  { type: Date,   default: null },
+    confidence:      { type: Number, default: null },
+    keywords:        { type: [String], default: [] },
+    summary:         { type: String, default: null },
   },
   {
     timestamps: true,       // adds createdAt + updatedAt automatically

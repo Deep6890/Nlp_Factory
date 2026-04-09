@@ -1,124 +1,77 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-<<<<<<< HEAD
+import { AuthProvider }     from './context/AuthContext';
+import { InsightsProvider } from './context/InsightsContext';
+import { ThemeProvider }    from './context/ThemeContext';
+import ProtectedRoute       from './components/ProtectedRoute';
+import Navbar               from './components/Navbar';
 
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Common/Navbar';
+/* ── Public pages ── */
+import LoginPage  from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
-=======
-import { AppProvider } from './context/AppContext';
+/* ── Dashboard pages ── */
+import DashboardHome      from './pages/DashboardHome';
+import SessionsPage       from './pages/SessionsPage';
+import SessionDetailPage  from './pages/SessionDetailPage';
+import InsightsEditorPage from './pages/InsightsEditorPage';
+import LiveDetectionPage  from './pages/LiveDetectionPage';
+import InsightsPage       from './pages/InsightsPage';
+import RemindersPage      from './pages/RemindersPage';
+import AlertsPage         from './pages/AlertsPage';
+import ReportsPage        from './pages/ReportsPage';
+import ProfilePage        from './pages/ProfilePage';
+import SettingsPage       from './pages/SettingsPage';
+import AnalyticsPage      from './pages/AnalyticsPage';
 
-// Layout
-import Navbar from './components/Common/Navbar';
-
-// Public & Auth
->>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
-import LandingPage from './components/Public/LandingPage';
-import Login from './components/Auth/Login';
-import Signup from './components/Auth/Signup';
-
-import Main from './components/Dashboard/Main';
-import Sessions from './components/Dashboard/Sessions';
-import SessionDetail from './components/Dashboard/SessionDetail';
-import Settings from './components/Dashboard/Settings';
-import Profile from './components/Dashboard/Profile';
-import LiveDetection from './components/Dashboard/LiveDetection';
-import Insights from './components/Dashboard/Insights';
-import Decisions from './components/Dashboard/Decisions';
-import Reminders from './components/Dashboard/Reminders';
-import Alerts from './components/Dashboard/Alerts';
-import Reports from './components/Dashboard/Reports';
-<<<<<<< HEAD
-import Analytics from './components/Dashboard/Analytics';
+/* ── Public landing (keep existing) ── */
+import LandingPage from './pages/LandingPage';
 
 const DashboardLayout = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#FFFDF6' }}>
+  <div className="min-h-screen flex flex-col" style={{ background:'var(--bg-page)', transition:'background-color 0.25s ease' }}>
     <Navbar />
-    <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px 40px' }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        <Outlet />
-      </div>
+    <div className="flex-1 w-full max-w-[1440px] mx-auto px-7 pb-12 pt-6 box-border">
+      <Outlet />
     </div>
   </div>
 );
 
-function App() {
+export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <InsightsProvider>
+          <Router>
+            <Routes>
+              {/* Public */}
+              <Route path="/"        element={<LandingPage />} />
+              <Route path="/login"   element={<LoginPage />} />
+              <Route path="/signup"  element={<SignupPage />} />
 
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<Main />} />
-              <Route path="history" element={<Sessions />} />
-              <Route path="live" element={<LiveDetection />} />
-              <Route path="sessions" element={<Sessions />} />
-              <Route path="sessions/:id" element={<SessionDetail />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="insights" element={<Insights />} />
-              <Route path="decisions" element={<Decisions />} />
-              <Route path="reminders" element={<Reminders />} />
-              <Route path="alerts" element={<Alerts />} />
-              <Route path="reports" element={<Reports />} />
-              <Route path="analytics" element={<Analytics />} />
-            </Route>
-          </Route>
+              {/* Protected dashboard */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<DashboardLayout />}>
+                  <Route index                          element={<DashboardHome />} />
+                  <Route path="history"                 element={<SessionsPage />} />
+                  <Route path="live"                    element={<LiveDetectionPage />} />
+                  <Route path="sessions"                element={<SessionsPage />} />
+                  <Route path="sessions/:id"            element={<SessionDetailPage />} />
+                  <Route path="sessions/:id/edit-insights" element={<InsightsEditorPage />} />
+                  <Route path="insights"                element={<InsightsPage />} />
+                  <Route path="reminders"               element={<RemindersPage />} />
+                  <Route path="alerts"                  element={<AlertsPage />} />
+                  <Route path="reports"                 element={<ReportsPage />} />
+                  <Route path="profile"                 element={<ProfilePage />} />
+                  <Route path="settings"                element={<SettingsPage />} />
+                  <Route path="analytics"               element={<AnalyticsPage />} />
+                </Route>
+              </Route>
 
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
-=======
-
-const DashboardLayout = () => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#FFFDF6' }}>
-      <Navbar />
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px 40px' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <Outlet />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-function App() {
-  return (
-    <AppProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Main />} />
-          <Route path="history" element={<Sessions />} />
-          <Route path="live" element={<LiveDetection />} />
-          <Route path="sessions" element={<Sessions />} />
-          <Route path="sessions/:id" element={<SessionDetail />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="insights" element={<Insights />} />
-          <Route path="decisions" element={<Decisions />} />
-          <Route path="reminders" element={<Reminders />} />
-          <Route path="alerts" element={<Alerts />} />
-          <Route path="reports" element={<Reports />} />
-        </Route>
-
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
-    </AppProvider>
->>>>>>> dd881948122f09248bf8bacc155ba9069e739fe3
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </Router>
+        </InsightsProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
-
-export default App;

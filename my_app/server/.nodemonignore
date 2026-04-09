@@ -1,0 +1,12 @@
+uploads/
+tmp/
+scripts/
+*.log
+*.wav
+*.mp3
+*.m4a
+index.js
+.env
+.env.*
+package-lock.json
+node_modules/

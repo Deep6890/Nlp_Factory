@@ -26,7 +26,7 @@ router.get('/dashboard', userController.getDashboard);
 router.put('/profile', updateProfileRules, userController.updateProfile);
 
 // GET /api/v1/users/:userId/audios
-// :userId can be a MongoDB ObjectId or the shorthand "me"
+// :userId can be a UUID or the shorthand "me"
 router.get('/:userId/audios', getUserAudiosRules, recordingController.getUserAudios);
 
 module.exports = router;

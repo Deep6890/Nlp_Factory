@@ -81,7 +81,7 @@ class IndicWhisperSTT:
         language: str = "hi",
         model_id: str | None = None,
         device: str = "auto",
-        batch_size: int = 1,
+        batch_size: int | None = None,   # None = auto (8 on GPU, 1 on CPU)
     ):
         self.language = language
 
@@ -92,6 +92,20 @@ class IndicWhisperSTT:
             self.device = device
 
         self.dtype = torch.float16 if self.device == "cuda" else torch.float32
+
+        # ── Batch size ─────────────────────────────────────────────────────────
+        if batch_size is None:
+            self.batch_size = 8 if self.device == "cuda" else 1
+        else:
+            self.batch_size = batch_size
+
+        if self.device == "cuda":
+            gpu_name = torch.cuda.get_device_name(0)
+            vram_gb  = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            logger.info("[IndicWhisper] NVIDIA %s — %.1fGB VRAM — float16 batch=%d",
+                        gpu_name, vram_gb, self.batch_size)
+        else:
+            logger.info("[IndicWhisper] CPU mode — float32 batch=1")
 
         # ── Model ID ───────────────────────────────────────────────────────────
         if model_id:
@@ -134,6 +148,14 @@ class IndicWhisperSTT:
         )
         model.to(self.device)
 
+        # Flash attention via BetterTransformer on GPU (~2x speedup)
+        if self.device == "cuda":
+            try:
+                model = model.to_bettertransformer()
+                logger.info("[IndicWhisper] BetterTransformer enabled")
+            except Exception:
+                pass
+
         processor = AutoProcessor.from_pretrained(
             self.model_id,
             cache_dir=str(CACHE_DIR),
@@ -147,7 +169,7 @@ class IndicWhisperSTT:
             feature_extractor=processor.feature_extractor,
             torch_dtype=self.dtype,
             device=self.device,
-            batch_size=batch_size,
+            batch_size=self.batch_size,
         )
 
     # ── Language kwargs ───────────────────────────────────────────────────────────────────
@@ -192,19 +214,24 @@ class IndicWhisperSTT:
         if len(audio) == 0:
             return ""
 
-        audio_input = {"raw": audio.astype(np.float32), "sampling_rate": sample_rate}
+        audio_input  = {"raw": audio.astype(np.float32), "sampling_rate": sample_rate}
         duration_sec = len(audio) / sample_rate
 
-        # Whisper needs return_timestamps=True for audio longer than 30 seconds.
-        # We always enable it so both short and long audio work identically —
-        # then we join the text chunks to get the full transcript.
+        # Adaptive chunking: larger windows for long recordings reduce overhead
+        chunk_s  = 30 if duration_sec <= 300 else 60   # 60s chunks for >5min audio
+        stride_s = 5  if duration_sec <= 300 else 10
+
         result = self.pipe(
             audio_input,
             generate_kwargs=self._generate_kwargs(),
-            return_timestamps=True,          # required for long-form; works on short too
-            chunk_length_s=30,               # process in 30s windows
-            stride_length_s=5,               # 5s overlap between windows
+            return_timestamps=True,
+            chunk_length_s=chunk_s,
+            stride_length_s=stride_s,
+            batch_size=self.batch_size,
         )
+
+        logger.info("[IndicWhisper] duration=%.1fs  chunk=%ds  device=%s  batch=%d",
+                    duration_sec, chunk_s, self.device, self.batch_size)
 
         # result["chunks"] = [{"text": "...", "timestamp": (start, end)}, ...]
         # result["text"]   = joined text (available in newer transformers)
@@ -224,13 +251,17 @@ class IndicWhisperSTT:
         self, audio: np.ndarray, sample_rate: int = SAMPLE_RATE
     ) -> dict:
         """Transcribe and return word-level timestamps dict."""
-        audio_input = {"raw": audio.astype(np.float32), "sampling_rate": sample_rate}
+        audio_input  = {"raw": audio.astype(np.float32), "sampling_rate": sample_rate}
+        duration_sec = len(audio) / sample_rate
+        chunk_s  = 30 if duration_sec <= 300 else 60
+        stride_s = 5  if duration_sec <= 300 else 10
         result = self.pipe(
             audio_input,
             generate_kwargs=self._generate_kwargs(),
             return_timestamps="word",
-            chunk_length_s=30,
-            stride_length_s=5,
+            chunk_length_s=chunk_s,
+            stride_length_s=stride_s,
+            batch_size=self.batch_size,
         )
         return result
 

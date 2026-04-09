@@ -79,18 +79,10 @@ def process_text_pipeline(
 
     text = text.strip()
 
-    # Finance filter
+    # Finance filter — still run full analysis even if not finance
     is_finance = skip_finance_filter or is_finance_related(text)
 
-    if not is_finance:
-        logger.info("No finance content detected.")
-        return _build_output(
-            finance_detected=False,
-            source_language=source_lang,
-            original_text=original_text or text,
-            english_text=text,
-        )
-
+    # Always run sentiment, NLP and LLM — finance flag just labels the result
     # Sentiment
     sentiment = get_sentiment(text)
     sent_label = sentiment.get("label", "neutral")
@@ -100,11 +92,11 @@ def process_text_pipeline(
     entities = extract_local_entities(text)
     keywords = extract_keywords(text)
 
-    # LLM deep extraction
+    # LLM deep extraction — always run
     advanced = extract_advanced_insights(text, lang=source_lang)
 
     return _build_output(
-        finance_detected=True,
+        finance_detected=is_finance,
         source_language=source_lang,
         original_text=original_text or text,
         english_text=text,

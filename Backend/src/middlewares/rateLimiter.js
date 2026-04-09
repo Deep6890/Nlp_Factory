@@ -1,7 +1,7 @@
 const rateLimit = require('express-rate-limit');
 
 const windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10);  // 15 min
-const max      = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100',  10);
+const max      = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '500',  10);  // raised
 const authMax  = parseInt(process.env.AUTH_RATE_LIMIT_MAX    || '20',   10);
 
 const handler = (req, res) => {

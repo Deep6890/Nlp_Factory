@@ -1,18 +1,13 @@
 /**
  * src/api/client.js
- * Central fetch wrapper.  All API helpers import from here.
- *
- * On success  → returns response.data   (the inner payload object)
- * On failure  → throws Error with server's message
- * On 401      → clears token + hard-redirects to /login
+ * Central fetch wrapper. Token is read from localStorage directly —
+ * works for both Supabase-issued and backend-minted JWTs.
  */
 
-const BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api/v1';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api/v1';
 
-// ── token helpers ─────────────────────────────────────────────────────────────
-
-export const getToken = () => localStorage.getItem('armor_token');
+// Always read from localStorage — set by AuthContext on login/signup
+const getToken = () => localStorage.getItem('armor_token') || null;
 
 const handleUnauthorized = () => {
   localStorage.removeItem('armor_token');
@@ -20,14 +15,6 @@ const handleUnauthorized = () => {
   window.location.href = '/login';
 };
 
-// ── JSON requests ─────────────────────────────────────────────────────────────
-
-/**
- * @param {string} path    e.g. '/auth/login'
- * @param {string} method  'GET' | 'POST' | 'PUT' | 'DELETE'
- * @param {object} [body]  Will be JSON-encoded
- * @returns {Promise<any>} The `data` field from the standardised server response
- */
 export const apiFetch = async (path, method = 'GET', body = undefined) => {
   const token = getToken();
 
@@ -36,15 +23,13 @@ export const apiFetch = async (path, method = 'GET', body = undefined) => {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  const options = {
-    method,
-    headers,
-    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
-  };
-
   let response;
   try {
-    response = await fetch(`${BASE_URL}${path}`, options);
+    response = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers,
+      ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+    });
   } catch {
     throw new Error('Network error – please check your connection.');
   }
@@ -69,20 +54,9 @@ export const apiFetch = async (path, method = 'GET', body = undefined) => {
     throw new Error(msg);
   }
 
-  // Backend standard shape: { success, message, data: { ... } }
   return json.data ?? json;
 };
 
-// ── Multipart upload ──────────────────────────────────────────────────────────
-
-/**
- * POST a FormData object. Does NOT set Content-Type so the browser can set
- * the correct multipart boundary automatically.
- *
- * @param {string}   path
- * @param {FormData} formData
- * @returns {Promise<any>}
- */
 export const apiUpload = async (path, formData) => {
   const token = getToken();
 

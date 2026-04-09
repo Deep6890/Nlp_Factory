@@ -1,67 +1,41 @@
-const User       = require('../models/User');
-const ApiError   = require('../utils/ApiError');
-const Recording  = require('../models/Recording');
-const Transcript = require('../models/Transcript');
+const supabase = require('../config/supabase');
+const ApiError = require('../utils/ApiError');
 
-/**
- * Fetch a user by id (no password).
- *
- * @param {string} userId
- */
 const getUserById = async (userId) => {
-  const user = await User.findById(userId).lean();
-  if (!user) throw ApiError.notFound('User not found');
-
-  return {
-    _id:       user._id.toString(),
-    name:      user.name,
-    email:     user.email,
-    role:      user.role,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, name, email, role, created_at, updated_at')
+    .eq('id', userId)
+    .single();
+  if (error || !data) throw ApiError.notFound('User not found');
+  return { _id: data.id, name: data.name, email: data.email, role: data.role, createdAt: data.created_at, updatedAt: data.updated_at };
 };
 
-/**
- * Update the authenticated user's name.
- *
- * @param {string} userId
- * @param {{ name: string }} payload
- */
 const updateProfile = async (userId, { name }) => {
-  const user = await User.findByIdAndUpdate(
-    userId,
-    { name: name.trim() },
-    { returnDocument: 'after', runValidators: true }
-  ).lean();
-
-  if (!user) throw ApiError.notFound('User not found');
-
-  return {
-    _id:       user._id.toString(),
-    name:      user.name,
-    email:     user.email,
-    role:      user.role,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
+  const { data, error } = await supabase
+    .from('users')
+    .update({ name: name.trim() })
+    .eq('id', userId)
+    .select('id, name, email, role, created_at, updated_at')
+    .single();
+  if (error || !data) throw ApiError.notFound('User not found');
+  return { _id: data.id, name: data.name, email: data.email, role: data.role, createdAt: data.created_at, updatedAt: data.updated_at };
 };
 
-/**
- * Aggregate dashboard stats for a user.
- * Pulls recording + transcript counts from MongoDB.
- *
- * @param {string} userId
- */
 const getDashboardStats = async (userId) => {
-  const [totalRecordings, totalTranscripts, highRiskCount, financeCount] = await Promise.all([
-    Recording.countDocuments({ userId }),
-    Transcript.countDocuments({ userId }),
-    Transcript.countDocuments({ userId, status: 'done', 'insights.risk_level': 'high' }),
-    Transcript.countDocuments({ userId, status: 'done', 'insights.finance_detected': true }),
+  const [recRes, trRes, highRiskRes, financeRes] = await Promise.all([
+    supabase.from('recordings').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+    supabase.from('transcripts').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+    supabase.from('transcripts').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('status', 'done').eq('insights->>risk_level', 'high'),
+    supabase.from('transcripts').select('id', { count: 'exact', head: true }).eq('user_id', userId).eq('status', 'done').eq('insights->>finance_detected', 'true'),
   ]);
 
-  return { totalRecordings, totalTranscripts, highRiskCount, financeCount };
+  return {
+    totalRecordings: recRes.count || 0,
+    totalTranscripts: trRes.count || 0,
+    highRiskCount: highRiskRes.count || 0,
+    financeCount: financeRes.count || 0,
+  };
 };
 
 module.exports = { getUserById, updateProfile, getDashboardStats };
