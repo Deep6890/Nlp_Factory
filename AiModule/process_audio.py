@@ -30,7 +30,6 @@ import json
 import logging
 import sys
 import tempfile
-import urllib.request
 from pathlib import Path
 
 logging.basicConfig(
@@ -74,15 +73,36 @@ load_dotenv(_ROOT / ".env", override=False)
 load_dotenv(_ROOT / ".." / ".env", override=False)
 
 
-def _download(url: str) -> str:
+def _download(url: str, max_retries: int = 3) -> str:
+    import requests as _requests
     ext = Path(url.split("?")[0]).suffix or ".wav"
     if ext not in {".wav", ".mp3", ".flac", ".ogg", ".m4a", ".webm", ".aac"}:
         ext = ".wav"
     tmp = tempfile.NamedTemporaryFile(suffix=ext, delete=False)
     log.info("Downloading %s", url[:80])
-    urllib.request.urlretrieve(url, tmp.name)
-    log.info("Saved to %s  (%d bytes)", tmp.name, os.path.getsize(tmp.name))
-    return tmp.name
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            with _requests.get(url, stream=True, timeout=120) as r:
+                r.raise_for_status()
+                total = int(r.headers.get("content-length", 0))
+                downloaded = 0
+                with open(tmp.name, "wb") as f:
+                    for chunk in r.iter_content(chunk_size=65536):
+                        if chunk:
+                            f.write(chunk)
+                            downloaded += len(chunk)
+            actual = os.path.getsize(tmp.name)
+            if total and actual < total * 0.99:
+                raise IOError(f"Incomplete download: got {actual} of {total} bytes")
+            log.info("Saved to %s  (%d bytes)", tmp.name, actual)
+            return tmp.name
+        except Exception as e:
+            log.warning("Download attempt %d/%d failed: %s", attempt, max_retries, e)
+            if attempt == max_retries:
+                raise
+            import time as _time
+            _time.sleep(2 * attempt)  # backoff: 2s, 4s
 
 
 def main():

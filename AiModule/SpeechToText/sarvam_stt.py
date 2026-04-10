@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 # ── Config ────────────────────────────────────────────────────────────────────
 _API_KEY      = os.environ.get("SARVAM_API_KEY", "sk_534odh01_Dcn2V1bnRbzgpbpYkFjsOKp7")
 _API_URL      = "https://api.sarvam.ai/speech-to-text"
-_DAILY_LIMIT  = int(os.environ.get("SARVAM_DAILY_LIMIT", "1"))
+_DAILY_LIMIT  = int(os.environ.get("SARVAM_DAILY_LIMIT", "5"))
 _USAGE_FILE   = Path(__file__).parent.parent / ".sarvam_usage.json"
 
 # Sarvam language codes
@@ -126,30 +126,16 @@ class SarvamSTT:
                 "Use slow mode or try again tomorrow."
             )
 
-        # Map language code
-        lang_code = _LANG_MAP.get(language or "hi", "hi-IN")
+        # Map language code — None means auto-detect (don't send language_code to Sarvam)
+        lang_code = _LANG_MAP.get(language, None) if language else None
+        headers   = {"api-subscription-key": self._api_key}
 
-        log.info("[Sarvam] Transcribing %s  lang=%s", Path(audio_path).name, lang_code)
+        log.info("[Sarvam] Transcribing %s  lang=%s", Path(audio_path).name, lang_code or "auto-detect")
         t0 = time.perf_counter()
 
         try:
-            with open(audio_path, "rb") as f:
-                files   = {"file": (Path(audio_path).name, f, self._mime(audio_path))}
-                data    = {"model": "saarika:v2", "language_code": lang_code}
-                headers = {"api-subscription-key": self._api_key}
-
-                resp = requests.post(_API_URL, headers=headers, files=files, data=data, timeout=60)
-
+            text, detected = self._transcribe_chunked(audio_path, lang_code, headers)
             elapsed = round(time.perf_counter() - t0, 2)
-
-            if resp.status_code != 200:
-                err = resp.json().get("error", {}).get("message", resp.text[:200])
-                log.error("[Sarvam] API error %d: %s", resp.status_code, err)
-                return self._error(f"Sarvam API {resp.status_code}: {err}", language, audio_path)
-
-            data_out = resp.json()
-            text     = data_out.get("transcript", "").strip()
-            detected = data_out.get("language_code", lang_code)
 
             log.info("[Sarvam] Done in %.2fs  text=%r", elapsed, text[:80])
 
@@ -161,7 +147,7 @@ class SarvamSTT:
                 "language":           detected.split("-")[0] if "-" in detected else detected,
                 "language_name":      _LANG_NAMES.get(detected, detected),
                 "confidence":         0.92,   # Sarvam doesn't return confidence
-                "stt_model_used":     "sarvam/saarika:v2",
+                "stt_model_used":     "sarvam/saarika:v2.5",
                 "stt_error":          None,
                 "audio_duration_sec": self._duration(audio_path),
             }
@@ -173,6 +159,84 @@ class SarvamSTT:
             return self._error(str(e), language, audio_path)
 
     # ── Helpers ───────────────────────────────────────────────────────────────
+
+    def _ensure_max_30s(self, audio_path: str) -> str:
+        """
+        DEPRECATED — replaced by _transcribe_chunked.
+        Kept as no-op to avoid breaking callers.
+        """
+        return audio_path
+
+    def _transcribe_chunked(
+        self,
+        audio_path: str,
+        lang_code: Optional[str],
+        headers: dict,
+    ) -> tuple:
+        """
+        Split audio into 30s chunks, transcribe each via Sarvam, join results.
+        Returns (full_text, detected_language_code).
+        """
+        import requests
+        from pydub import AudioSegment
+
+        seg = AudioSegment.from_file(audio_path)
+        duration_ms = len(seg)
+        chunk_ms    = 30_000  # 30 seconds
+
+        if duration_ms <= chunk_ms:
+            # Single chunk — send as-is
+            text, detected = self._call_sarvam_api(audio_path, lang_code, headers)
+            return text, detected
+
+        log.info("[Sarvam] Audio %.1fs — splitting into 30s chunks", duration_ms / 1000)
+        texts    = []
+        detected = lang_code or "unknown"
+        chunk_idx = 0
+        for start in range(0, duration_ms, chunk_ms):
+            chunk = seg[start:start + chunk_ms]
+            tmp_wav = audio_path.rsplit('.', 1)[0] + f'_chunk{chunk_idx}.wav'
+            chunk.export(tmp_wav, format='wav')
+            log.info("[Sarvam] Chunk %d: %.1f–%.1fs", chunk_idx, start/1000, min((start+chunk_ms)/1000, duration_ms/1000))
+            try:
+                text, chunk_detected = self._call_sarvam_api(tmp_wav, lang_code, headers)
+                if text:
+                    texts.append(text.strip())
+                # Use first successfully detected language
+                if chunk_detected and chunk_detected != "unknown" and detected == "unknown":
+                    detected = chunk_detected
+            except Exception as e:
+                log.warning("[Sarvam] Chunk %d failed: %s", chunk_idx, e)
+            finally:
+                try:
+                    import os as _os
+                    _os.unlink(tmp_wav)
+                except Exception:
+                    pass
+            chunk_idx += 1
+
+        return ' '.join(texts), detected
+
+    def _call_sarvam_api(self, audio_path: str, lang_code: Optional[str], headers: dict) -> tuple:
+        """Send a single ≤30s audio file to Sarvam. Returns (text, detected_language_code)."""
+        import requests
+        data = {"model": "saarika:v2.5"}
+        if lang_code:
+            data["language_code"] = lang_code
+        with open(audio_path, "rb") as f:
+            files = {"file": (Path(audio_path).name, f, self._mime(audio_path))}
+            resp  = requests.post(_API_URL, headers=headers, files=files, data=data, timeout=60)
+        if resp.status_code != 200:
+            err_body = resp.text[:300]
+            try:
+                err_body = resp.json().get("detail", err_body)
+            except Exception:
+                pass
+            raise RuntimeError(f"Sarvam API {resp.status_code}: {err_body}")
+        body     = resp.json()
+        text     = body.get("transcript", "").strip()
+        detected = body.get("language_code", lang_code or "unknown")
+        return text, detected
 
     def _mime(self, path: str) -> str:
         ext = Path(path).suffix.lower()
@@ -201,7 +265,7 @@ class SarvamSTT:
             "language":           language or "unknown",
             "language_name":      _LANG_NAMES.get(_LANG_MAP.get(language or "", ""), "Unknown"),
             "confidence":         0.0,
-            "stt_model_used":     "sarvam/saarika:v2",
+            "stt_model_used":     "sarvam/saarika:v2.5",
             "stt_error":          msg,
             "audio_duration_sec": self._duration(audio_path),
         }

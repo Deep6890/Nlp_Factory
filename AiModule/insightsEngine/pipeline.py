@@ -110,5 +110,8 @@ def process_text_pipeline(
         risk_level=advanced.get("risk_level", "low"),
         amount=advanced.get("amount"),
         entities=entities,
-        keywords=keywords,
+        # Merge spaCy keywords + LLM topics for richer keyword coverage
+        keywords=list(dict.fromkeys(
+            keywords + [t for t in advanced.get("topics", []) if isinstance(t, str)]
+        )),
     )

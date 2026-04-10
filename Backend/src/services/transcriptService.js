@@ -44,7 +44,7 @@ const processTranscript = async (userId, recordingId, storageUrl, mode = 'slow',
     if (mode === 'fast') {
       const canUse = await _checkFastLimit(userId);
       if (!canUse) {
-        throw new Error('FAST_LIMIT_EXCEEDED: Fast transcription limit reached for today (1/day). Use slow mode.');
+        throw new Error(`FAST_LIMIT_EXCEEDED: Fast transcription limit reached for today (${process.env.SARVAM_DAILY_LIMIT || 5}/day). Use slow mode.`);
       }
     }
 
@@ -81,8 +81,9 @@ const processTranscript = async (userId, recordingId, storageUrl, mode = 'slow',
   }
 };
 
-// ── Daily fast-pipeline limit (1 per user per day) ───────────────────────────
+// ── Daily fast-pipeline limit ─────────────────────────────────────────────────
 const _checkFastLimit = async (userId) => {
+  const DAILY_LIMIT = parseInt(process.env.SARVAM_DAILY_LIMIT || '5', 10);
   const today = new Date().toISOString().slice(0, 10);
   const { count } = await supabase
     .from('transcripts')
@@ -90,7 +91,7 @@ const _checkFastLimit = async (userId) => {
     .eq('user_id', userId)
     .eq('insights->>mode', 'fast')
     .gte('created_at', `${today}T00:00:00Z`);
-  return (count || 0) === 0;
+  return (count || 0) < DAILY_LIMIT;
 };
 
 const _callAiModule = (storageUrl, mode = 'slow', language = null) => {
@@ -270,6 +271,16 @@ const getInsightsSummary = async (userId) => {
 
     if (ins.finance_detected) financeCount++;
 
+    // Also extract LLM topics and keywords
+    for (const kw of (ins.topics || [])) {
+      const k = (typeof kw === 'string' ? kw : '').toLowerCase().trim();
+      if (k && k.length > 2) keywordFreq[k] = (keywordFreq[k] || 0) + 2;
+    }
+    for (const kw of (ins.keywords || [])) {
+      const k = (typeof kw === 'string' ? kw : '').toLowerCase().trim();
+      if (k && k.length > 2) keywordFreq[k] = (keywordFreq[k] || 0) + 2;
+    }
+
     if (!sentimentByDay[day]) sentimentByDay[day] = { positive: 0, negative: 0, neutral: 0, total: 0 };
     const sl = (ins.sentiment_label || 'neutral').toLowerCase();
     sentimentByDay[day][sl] = (sentimentByDay[day][sl] || 0) + 1;
@@ -352,6 +363,7 @@ const _mapTranscript = (r) => ({
 // ── Fast limit status (for frontend to show remaining uses) ──────────────────
 const getFastLimitStatus = async (userId) => {
   const today = new Date().toISOString().slice(0, 10);
+  const DAILY_LIMIT = parseInt(process.env.SARVAM_DAILY_LIMIT || '5', 10);
   const { count } = await supabase
     .from('transcripts')
     .select('id', { count: 'exact', head: true })
@@ -359,7 +371,7 @@ const getFastLimitStatus = async (userId) => {
     .eq('insights->>mode', 'fast')
     .gte('created_at', `${today}T00:00:00Z`);
   const used = count || 0;
-  return { used, limit: 1, remaining: Math.max(0, 1 - used), canUse: used === 0 };
+  return { used, limit: DAILY_LIMIT, remaining: Math.max(0, DAILY_LIMIT - used), canUse: used < DAILY_LIMIT };
 };
 
 module.exports = {

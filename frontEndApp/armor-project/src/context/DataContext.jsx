@@ -39,9 +39,20 @@ const buildTrendData = (transcripts) => {
 const buildFinancialKeywords = (transcripts) => {
   const freq = {};
   transcripts.forEach(t => {
+    // Source 1: top-level keywords from spaCy NLP
     (t.keywords || []).forEach(kw => {
-      const k = typeof kw === 'string' ? kw : kw.word || kw;
-      if (k) freq[k] = (freq[k] || 0) + 1;
+      const k = (typeof kw === 'string' ? kw : kw.word || kw || '').toLowerCase().trim();
+      if (k && k.length > 2) freq[k] = (freq[k] || 0) + 1;
+    });
+    // Source 2: LLM-extracted topics from insights JSON
+    (t.insights?.topics || []).forEach(kw => {
+      const k = (typeof kw === 'string' ? kw : '').toLowerCase().trim();
+      if (k && k.length > 2) freq[k] = (freq[k] || 0) + 2; // weight LLM topics higher
+    });
+    // Source 3: LLM keywords field if present
+    (t.insights?.keywords || []).forEach(kw => {
+      const k = (typeof kw === 'string' ? kw : '').toLowerCase().trim();
+      if (k && k.length > 2) freq[k] = (freq[k] || 0) + 2;
     });
   });
   return Object.entries(freq)

@@ -77,7 +77,7 @@ const RiskBadge = ({ level }) => {
 const ModeSelector = ({ mode, setMode, fastLimit }) => {
   const canFast = fastLimit?.canUse !== false;
   const used    = fastLimit?.used ?? 0;
-  const limit   = fastLimit?.limit ?? 1;
+  const limit   = fastLimit?.limit ?? 5;
 
   return (
     <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
@@ -283,7 +283,7 @@ const LiveDetection = () => {
   useEffect(() => {
     getFastLimitStatus()
       .then(d => setFastLimit(d.status ?? d))
-      .catch(() => setFastLimit({ used: 0, limit: 1, remaining: 1, canUse: true }));
+      .catch(() => setFastLimit({ used: 0, limit: 5, remaining: 5, canUse: true }));
   }, []);
 
   // Auto-switch to slow if fast limit exhausted
@@ -566,8 +566,30 @@ const LiveDetection = () => {
                   </div>
                   <button onClick={removeFile} disabled={uploading} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--text-muted)', padding:2 }}><X size={14} /></button>
                 </div>
+
+                {/* Inline mode picker */}
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:12 }}>
+                  <button onClick={() => fastLimit?.canUse !== false && setMode('fast')}
+                    style={{ borderRadius:10, padding:'10px 12px', textAlign:'left', cursor: fastLimit?.canUse !== false ? 'pointer' : 'not-allowed', opacity: fastLimit?.canUse !== false ? 1 : 0.4, background:'var(--bg-page)', border: mode === 'fast' ? '2px solid #D97706' : '2px solid var(--border)', transition:'all 0.15s' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+                      <Zap size={13} color={mode === 'fast' ? '#D97706' : 'var(--text-muted)'} />
+                      <span style={{ fontSize:12, fontWeight:800, color: mode === 'fast' ? '#D97706' : 'var(--text-muted)' }}>Fast</span>
+                      {fastLimit?.canUse === false && <Lock size={10} color="var(--text-muted)" />}
+                    </div>
+                    <div style={{ fontSize:10, color:'var(--text-muted)', lineHeight:1.5 }}>Sarvam AI · ~5s<br />{fastLimit?.used ?? 0}/{fastLimit?.limit ?? 5} used today</div>
+                  </button>
+                  <button onClick={() => setMode('slow')}
+                    style={{ borderRadius:10, padding:'10px 12px', textAlign:'left', cursor:'pointer', background:'var(--bg-page)', border: mode === 'slow' ? '2px solid var(--green)' : '2px solid var(--border)', transition:'all 0.15s' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:4 }}>
+                      <Cpu size={13} color={mode === 'slow' ? 'var(--green)' : 'var(--text-muted)'} />
+                      <span style={{ fontSize:12, fontWeight:800, color: mode === 'slow' ? 'var(--green)' : 'var(--text-muted)' }}>Accurate</span>
+                    </div>
+                    <div style={{ fontSize:10, color:'var(--text-muted)', lineHeight:1.5 }}>Local Whisper · 1–5 min<br />No daily limit</div>
+                  </button>
+                </div>
+
                 <button onClick={analyze} disabled={uploading} style={{ width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:8, background: uploading ? 'var(--bg-subtle)' : mode === 'fast' ? 'rgba(217,119,6,0.1)' : 'var(--green)', color: uploading ? 'var(--text-muted)' : mode === 'fast' ? 'var(--accent-amber)' : 'var(--text-inverse)', border: mode === 'fast' ? '1px solid rgba(217,119,6,0.3)' : 'none', borderRadius:11, padding:'11px', fontSize:13, fontWeight:700, cursor: uploading ? 'not-allowed' : 'pointer', transition:'all 0.2s' }}>
-                  {uploading ? <><Loader2 size={13} style={{ animation:'spin 1s linear infinite' }} /> Processing…</> : mode === 'fast' ? <><Zap size={13} /> Fast Analyze</> : <><Cpu size={13} /> Accurate Analyze</>}
+                  {uploading ? <><Loader2 size={13} style={{ animation:'spin 1s linear infinite' }} /> Processing…</> : mode === 'fast' ? <><Zap size={13} /> Analyze with Fast</> : <><Cpu size={13} /> Analyze with Accurate</>}
                 </button>
               </div>
             )}
@@ -581,8 +603,8 @@ const LiveDetection = () => {
         </div>
 
         {file && file.name.startsWith('live-') && (
-          <div style={{ marginTop:14, padding:'12px 16px', background:'rgba(5,150,105,0.08)', border:'1px solid rgba(5,150,105,0.2)', borderRadius:12, fontSize:13, fontWeight:600, color:'var(--accent-green)', display:'flex', alignItems:'center', gap:10 }}>
-            <CheckCircle2 size={15} /> Recording ready — click Analyze to process
+          <div style={{ marginTop:14, padding:'14px 16px', background:'rgba(5,150,105,0.08)', border:'1px solid rgba(5,150,105,0.2)', borderRadius:12, fontSize:13, fontWeight:600, color:'var(--accent-green)', display:'flex', alignItems:'center', gap:10 }}>
+            <CheckCircle2 size={15} /> Recording ready — select mode above and click Analyze
           </div>
         )}
       </div>
