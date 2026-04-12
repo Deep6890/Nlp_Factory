@@ -492,6 +492,8 @@ This project was developed for HACK2FUTURE 2.0. All rights reserved by Team Lazy
 
 <br/>
 
-⭐ Star this repo if Armor.ai impresses you
+Must ⭐ Star this repo if Armor.ai impresses you
 
 </div>
+
+
